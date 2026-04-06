@@ -20,18 +20,23 @@
 ### 方法二：使用命令提示字元(CMD)【使用.bat檔自動設定】
 #### 步驟1 ：將其複製到記事本
 ##### 第一種打法
+
 ``` shell showLineNumbers
 netsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} 
 netsh interface ip set dns name="乙太網路" static 140.124.13.1 
 netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
 ```
+
 假設IP位址為140.124.131.120則我需要這樣打
+
 ``` shell showLineNumbers
 netsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254 
 netsh interface ip set dns name="乙太網路" static 140.124.13.1 
 netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
 ```
+
 ##### 第二種打法(推薦)
+
 ``` shell showLineNumbers
 @echo off
 :: 確保指令路徑正確，避免環境變數問題
@@ -47,7 +52,9 @@ echo 設定完成！檢查結果：
 %CMD_NETSH% interface ip show config name="乙太網路"
 pause
 ```
+
 假設IP位址為140.124.131.120則我需要這樣打
+
 ``` shell showLineNumbers
 @echo off
 :: 確保指令路徑正確，避免環境變數問題
@@ -63,6 +70,7 @@ echo 設定完成！檢查結果：
 %CMD_NETSH% interface ip show config name="乙太網路"
 pause
 ```
+
 ##### 附錄：使用DHCP(動態分配IP)打法【宿舍不能用】
 
 >
@@ -84,6 +92,7 @@ echo 設定完成！檢查結果：
 %CMD_NETSH% interface ip show config name="乙太網路"
 pause
 ```
+
 #### 步驟2 ：以ANSI編碼方式來儲存檔案
 [![圖8](./圖檔/圖片8.png)](./圖檔/圖片8.png)
 #### 步驟3 ：以將副檔名從.txt改成.bat
