@@ -65,7 +65,9 @@ pause
 ```
 ##### 附錄：使用DHCP(動態分配IP)打法【宿舍不能用】
 
+>
 >只有這個使用UTF-8也沒問題
+>
 
 ``` shell showLineNumbers
 @echo off
