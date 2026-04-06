@@ -69,7 +69,6 @@ pause
 >只有這個使用UTF-8也沒問題
 >
 
-#####
 ``` shell showLineNumbers
 @echo off
 chcp 65001
