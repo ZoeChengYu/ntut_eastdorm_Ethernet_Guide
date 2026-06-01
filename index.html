@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>北科大宿舍有線網路攻略</title>
+  <meta name="description" content="NTUT 東側宿舍有線網路設定攻略 — 含 Windows、Linux 與 macOS 三種系統的靜態 IP 與 DNS 設定方法，以及校園入口網站的裝置登錄教學。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --green: #3fb950;
+      --yellow: #d29922;
+      --orange: #f0883e;
+      --red: #f85149;
+      --purple: #bc8cff;
+      --code-bg: #161b22;
+      --note-bg: rgba(88, 166, 255, 0.08);
+      --note-border: #58a6ff;
+      --tip-bg: rgba(63, 185, 80, 0.08);
+      --tip-border: #3fb950;
+      --warning-bg: rgba(210, 153, 34, 0.08);
+      --warning-border: #d29922;
+      --caution-bg: rgba(248, 81, 73, 0.08);
+      --caution-border: #f85149;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans TC', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13, 17, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .header-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .header-title .badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      background: var(--accent-glow);
+      color: var(--accent);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    nav { display: flex; gap: 1.5rem; }
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--text); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(88,166,255,0.08) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #e6edf3 0%, #58a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    .os-badges {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .os-badge {
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .os-badge.windows { background: rgba(0,120,212,0.15); border-color: rgba(0,120,212,0.4); color: #4fc3f7; }
+    .os-badge.linux   { background: rgba(63,185,80,0.12); border-color: rgba(63,185,80,0.4); color: var(--green); }
+    .os-badge.macos   { background: rgba(188,140,255,0.12); border-color: rgba(188,140,255,0.4); color: var(--purple); }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem 6rem;
+    }
+
+    /* ── Section headings ── */
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 3rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.4rem;
+      background: linear-gradient(180deg, var(--accent), var(--purple));
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 2rem 0 0.75rem;
+    }
+    h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 1.5rem 0 0.6rem;
+    }
+    h5 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin: 1.25rem 0 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Paragraphs & lists ── */
+    p { margin: 0.75rem 0; color: var(--text); }
+    ol, ul { padding-left: 1.75rem; margin: 0.75rem 0; }
+    li { margin: 0.35rem 0; }
+    li > p { margin: 0.25rem 0; }
+    strong { color: var(--text); font-weight: 600; }
+
+    /* ── Inline code ── */
+    code {
+      font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+      font-size: 0.85em;
+      background: var(--surface2);
+      color: #f97583;
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      overflow-x: auto;
+      margin: 0.75rem 0 1.25rem;
+      position: relative;
+    }
+    pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: 0.875rem;
+      color: #e6edf3;
+    }
+    /* Comment lines in shell */
+    pre code .comment { color: #8b949e; font-style: italic; }
+
+    /* ── Horizontal rule ── */
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5rem 0;
+    }
+
+    /* ── GitHub-style alerts ── */
+    .alert {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .alert-title {
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .alert-note   { background: var(--note-bg);    border-color: var(--note-border);    }
+    .alert-tip    { background: var(--tip-bg);     border-color: var(--tip-border);     }
+    .alert-warning{ background: var(--warning-bg); border-color: var(--warning-border); }
+    .alert-caution{ background: var(--caution-bg); border-color: var(--caution-border); }
+    .alert-note   .alert-title { color: var(--note-border);    }
+    .alert-tip    .alert-title { color: var(--tip-border);     }
+    .alert-warning.alert-title { color: var(--warning-border); }
+    .alert-caution .alert-title{ color: var(--caution-border); }
+    .alert p { margin: 0.35rem 0; font-size: 0.9rem; }
+    .alert ol, .alert ul { margin: 0.4rem 0; font-size: 0.9rem; }
+    .alert strong { font-weight: 600; }
+    .alert pre { margin: 0.5rem 0; }
+
+    /* ── Images ── */
+    .img-link { display: block; margin: 0.75rem 0; }
+    .img-link img, .content-img {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .img-link:hover img {
+      transform: scale(1.01);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+
+    /* ── Image grid (multi-column) ── */
+    .img-grid {
+      display: flex;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+      flex-wrap: wrap;
+    }
+    .img-grid a { flex: 1; min-width: 0; }
+    .img-grid img { width: 100%; display: block; }
+
+    /* ── Table ── */
+    .table-wrap { overflow-x: auto; margin: 1rem 0; }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    th { background: var(--surface2); font-weight: 600; color: var(--text); }
+    td { background: var(--surface); }
+    td img { max-width: 180px; border-radius: 6px; }
+    td a { color: var(--accent); text-decoration: none; }
+    td a:hover { text-decoration: underline; }
+
+    /* ── Blockquote (plain) ── */
+    blockquote {
+      border-left: 4px solid var(--border);
+      background: var(--surface);
+      padding: 0.75rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      color: var(--text-muted);
+      margin: 1rem 0;
+      font-style: italic;
+    }
+
+    /* ── Step card ── */
+    .step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      transition: border-color 0.2s;
+    }
+    .step:hover { border-color: var(--accent); }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+    .step-num {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .step-title { font-weight: 600; font-size: 1rem; }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      header { padding: 0 1rem; }
+      nav { gap: 1rem; }
+      .container { padding: 2rem 1rem 4rem; }
+      .img-grid { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-title">
+    🌐 北科大宿舍有線網路攻略
+    <span class="badge">東側宿舍</span>
+  </div>
+  <nav>
+    <a href="#ch0">前置</a>
+    <a href="#ch1">網路設定</a>
+    <a href="#ch2">登錄裝置</a>
+    <a href="#ch3">相關連結</a>
+  </nav>
+</header>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <h1>北科大宿舍有線網路攻略</h1>
+  <p>ntut_eastdorm_Ethernet_Guide — 三種系統完整設定教學，讓你快速連上宿網</p>
+  <div class="os-badges">
+    <span class="os-badge windows">⊞ Windows</span>
+    <span class="os-badge linux">🐧 Linux</span>
+    <span class="os-badge macos"> macOS</span>
+  </div>
+</div>
+
+<!-- ── Main Content ── -->
+<div class="container">
+
+  <!-- ── 第零章 ── -->
+  <h2 id="ch0">第零章　前置作業</h2>
+  <p>
+    在你連上優質又穩定的宿網之前，你必須確認你準備的電腦是否有 RJ45 網孔（如下圖 1）以及網路線（如下圖 2，若是桌上型電腦 PC，建議網路線長度超過 3m）。若電腦沒有 RJ45 網孔，請先購買 USB-C / Type-C 轉 RJ45 網路轉接頭；若沒有網路線，請先購買網路線（建議購買 Cat5e 或 Cat6 等規格的網路線以支援 Giga 級網速）。
+  </p>
+  <div class="img-grid">
+    <a class="img-link" href="./圖檔/圖片1.jpg" target="_blank">
+      <img src="./圖檔/圖片1.jpg" alt="圖1 RJ45 網孔" loading="lazy" />
+    </a>
+    <a class="img-link" href="./圖檔/圖片2.jpg" target="_blank">
+      <img src="./圖檔/圖片2.jpg" alt="圖2 網路線" loading="lazy" />
+    </a>
+  </div>
+  <div class="table-wrap">
+    <table><thead><tr><th>圖 1</th><th>圖 2</th></tr></thead></table>
+  </div>
+
+  <!-- ── 第壹章 ── -->
+  <h2 id="ch1">第壹章　網際網路設定</h2>
+
+  <!-- 方法一 -->
+  <h3>方法一：使用圖形化介面 (GUI)</h3>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">先開啟 Windows「設定」</div></div>
+    <a class="img-link" href="./圖檔/圖片3.png" target="_blank"><img src="./圖檔/圖片3.png" alt="圖3" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">點選「網路與網際網路」，接著點選「乙太網路」</div></div>
+    <a class="img-link" href="./圖檔/圖片4.png" target="_blank"><img src="./圖檔/圖片4.png" alt="圖4" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">在「IP 指派」點選「編輯」</div></div>
+    <a class="img-link" href="./圖檔/圖片5.png" target="_blank"><img src="./圖檔/圖片5.png" alt="圖5" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">將「編輯 IP 設定」從「自動 (DHCP)」切換為「手動」</div></div>
+    <a class="img-link" href="./圖檔/圖片6.png" target="_blank"><img src="./圖檔/圖片6.png" alt="圖6" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">5</div><div class="step-title">開啟「IPv4」選項，「IPv6」請保持關閉</div></div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">6</div><div class="step-title">依照宿網設定填寫 IP 位址、子網路遮罩、閘道與 DNS，並按儲存</div></div>
+    <a class="img-link" href="./圖檔/圖片7.png" target="_blank"><img src="./圖檔/圖片7.png" alt="圖7" loading="lazy" /></a>
+  </div>
+
+  <!-- 方法二 -->
+  <h3>方法二：Windows 系統 — 使用命令提示字元 (CMD)【使用 .bat 檔自動設定】</h3>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">將指令複製到記事本</div></div>
+
+    <h5>第一種打法</h5>
+    <pre><code>netsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
+netsh interface ip set dns name="乙太網路" static 140.124.13.1
+netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2</code></pre>
+
+    <p>假設IP位址為 <code>140.124.131.120</code> 則我需要這樣打</p>
+    <pre><code>netsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254
+netsh interface ip set dns name="乙太網路" static 140.124.13.1
+netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2</code></pre>
+
+    <h5>第二種打法（推薦）</h5>
+    <pre><code>@echo off
+<span class="comment">:: 確保指令路徑正確，避免環境變數問題</span>
+SET CMD_NETSH=C:\Windows\System32\netsh.exe
+echo [1/3] 正在設定靜態 IP ...
+%CMD_NETSH% interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
+echo [2/3] 正在設定主要 DNS ...
+%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1
+echo [3/3] 正在設定次要 DNS ...
+%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2
+echo.
+echo 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause</code></pre>
+
+    <p>假設IP位址為 <code>140.124.131.120</code> 則我需要這樣打</p>
+    <pre><code>@echo off
+<span class="comment">:: 確保指令路徑正確，避免環境變數問題</span>
+SET CMD_NETSH=C:\Windows\System32\netsh.exe
+echo [1/3] 正在設定靜態 IP ...
+%CMD_NETSH% interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254
+echo [2/3] 正在設定主要 DNS ...
+%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1
+echo [3/3] 正在設定次要 DNS ...
+%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2
+echo.
+echo 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause</code></pre>
+
+    <h5>附錄：使用 DHCP（動態分配IP）打法【宿舍不能用】</h5>
+    <blockquote>只有這個使用 UTF-8 也沒問題</blockquote>
+    <pre><code>@echo off
+chcp 65001
+<span class="comment">:: 確保指令路徑正確，避免環境變數問題</span>
+SET CMD_NETSH=C:\Windows\System32\netsh.exe
+echo [1/2] 正在設定動態 IP ...
+netsh interface ip set address name="乙太網路" source=dhcp
+echo [2/2] 正在設定動態取得 DNS ...
+netsh interface ip set dns name="乙太網路" source=dhcp
+echo 已恢復為自動取得 IP。
+echo.
+echo 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause</code></pre>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">以 ANSI 編碼方式儲存檔案</div></div>
+    <a class="img-link" href="./圖檔/圖片8.png" target="_blank"><img src="./圖檔/圖片8.png" alt="圖8" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">將副檔名從 .txt 改成 .bat</div></div>
+    <div class="img-grid">
+      <a class="img-link" href="./圖檔/圖片9.png" target="_blank"><img src="./圖檔/圖片9.png" alt="圖9" loading="lazy" /></a>
+      <a class="img-link" href="./圖檔/圖片10.png" target="_blank"><img src="./圖檔/圖片10.png" alt="圖10" loading="lazy" /></a>
+      <a class="img-link" href="./圖檔/圖片11.png" target="_blank"><img src="./圖檔/圖片11.png" alt="圖11" loading="lazy" /></a>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">以系統管理員身分執行該檔案</div></div>
+    <a class="img-link" href="./圖檔/圖片12.png" target="_blank"><img src="./圖檔/圖片12.png" alt="圖12" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">5</div><div class="step-title">看到 CMD 視窗顯示設定完成即完成設定</div></div>
+    <a class="img-link" href="./圖檔/圖片13.png" target="_blank"><img src="./圖檔/圖片13.png" alt="圖13" loading="lazy" /></a>
+  </div>
+
+  <hr />
+
+  <!-- 方法三 -->
+  <h3>方法三：Linux / macOS 系統 — 使用終端機 (Terminal)【直接執行指令】</h3>
+
+  <h4>🐧 Linux 系統（使用 nmcli）</h4>
+  <p>多數現代 Linux 發行版（如 Ubuntu, Debian, Fedora, Arch）皆預設使用 NetworkManager，因此推薦使用 <code>nmcli</code> 命令列工具。</p>
+
+  <ol>
+    <li>
+      <strong>查詢網路卡連線名稱</strong>：
+      <pre><code>nmcli connection show</code></pre>
+      請記下你要設定的有線網路連線名稱（中文系統通常為 <code>有線連線 1</code>，英文系統為 <code>Wired connection 1</code>，以下以 <code>"有線連線 1"</code> 為例）。
+    </li>
+    <li>
+      <strong>設定靜態 IP、閘道與 DNS</strong>：
+      <pre><code><span class="comment"># 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)</span>
+sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24
+
+<span class="comment"># 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)</span>
+sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}
+
+<span class="comment"># 設定主要與次要 DNS 伺服器</span>
+sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
+
+<span class="comment"># 設定為手動 (靜態) 模式</span>
+sudo nmcli connection modify "有線連線 1" ipv4.method manual</code></pre>
+
+      <p>例如IP位址為 <code>140.124.131.120</code> 則我需要這樣打</p>
+      <pre><code>sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24
+sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254
+sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
+sudo nmcli connection modify "有線連線 1" ipv4.method manual</code></pre>
+    </li>
+    <li>
+      <strong>重新啟動網路連線以套用設定</strong>：
+      <pre><code>sudo nmcli connection down "有線連線 1"
+sudo nmcli connection up "有線連線 1"</code></pre>
+    </li>
+    <li>
+      <strong>恢復自動取得 IP (DHCP)【宿舍有線網路不能用】</strong>：
+      <pre><code>sudo nmcli connection modify "有線連線 1" ipv4.method auto
+sudo nmcli connection up "有線連線 1"</code></pre>
+    </li>
+  </ol>
+
+  <h4> macOS 系統（使用 networksetup）</h4>
+  <p>macOS 系統可以使用內建的 <code>networksetup</code> 指令進行設定。</p>
+
+  <ol>
+    <li>
+      <strong>查詢網路服務名稱</strong>：
+      <pre><code>networksetup -listallnetworkservices</code></pre>
+      請記下你的有線網路服務名稱（通常為 <code>Ethernet</code> 或 <code>AX88179A</code> 等外接轉接卡名稱，以下以 <code>"Ethernet"</code> 為例）。
+    </li>
+    <li>
+      <strong>設定靜態 IP、子網路遮罩與閘道</strong>：
+      <pre><code>sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}</code></pre>
+    </li>
+    <li>
+      <strong>設定主要與次要 DNS</strong>：
+      <pre><code>sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2</code></pre>
+    </li>
+    <li>
+      <strong>恢復自動取得 IP (DHCP)【宿舍有線網路不能用】</strong>：
+      <pre><code>sudo networksetup -setdhcp "Ethernet"</code></pre>
+    </li>
+  </ol>
+
+  <!-- ── 第貳章 ── -->
+  <h2 id="ch2">第貳章　登錄裝置與連結IP</h2>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">首先，請先登錄校園入口網站</div></div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">點擊「網路管理」，接著點擊網路與資訊安全管理系統</div></div>
+    <a class="img-link" href="./圖檔/圖片14.png" target="_blank"><img src="./圖檔/圖片14.png" alt="圖14" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">完成點擊之後，自動新開分頁「網路與資訊安全管理系統」</div></div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">點擊「IP與MAC」，接著點擊「設備(MAC)管理」</div></div>
+    <a class="img-link" href="./圖檔/圖片15.png" target="_blank"><img src="./圖檔/圖片15.png" alt="圖15" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">5</div><div class="step-title">點擊「新增」</div></div>
+    <a class="img-link" href="./圖檔/圖片16.png" target="_blank"><img src="./圖檔/圖片16.png" alt="圖16" loading="lazy" /></a>
+
+    <div class="alert alert-tip" style="margin-top:1rem;">
+      <div class="alert-title">💡 TIP — 如何取得網路卡實體位址 (MAC Address)？</div>
+
+      <p><strong>Windows 系統：</strong></p>
+      <ol>
+        <li>
+          <strong>使用圖形化介面 (GUI)</strong>：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。
+          <a class="img-link" href="./圖檔/圖片17.png" target="_blank" style="margin-top:0.5rem;"><img src="./圖檔/圖片17.png" alt="圖17" loading="lazy" /></a>
+        </li>
+        <li>
+          <strong>使用命令提示字元 (CMD)</strong>：輸入 <code>getmac /v /fo list</code> 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。
+          <pre><code>getmac /v /fo list</code></pre>
+          <a class="img-link" href="./圖檔/圖片18.png" target="_blank"><img src="./圖檔/圖片18.png" alt="圖18" loading="lazy" /></a>
+        </li>
+      </ol>
+
+      <p><strong>Linux 系統：</strong></p>
+      <ol>
+        <li>
+          <strong>使用終端機</strong>：開啟終端機輸入 <code>ip link show</code> 指令，找到有線網卡（通常以 <code>en</code> 或 <code>eth</code> 開頭）下方的 <code>link/ether</code>，後面的 12 碼十六進位字元即為 MAC 位址。
+          <pre><code>ip link show</code></pre>
+        </li>
+      </ol>
+
+      <p><strong>macOS 系統：</strong></p>
+      <ol>
+        <li><strong>使用圖形化介面</strong>：點擊左上角「蘋果選單」 &nbsp;&#63743;&gt;「系統設定」&gt;「網路」&gt; 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）&gt; 點擊「詳細資訊...」&gt; 點擊左側「硬體」，即可看到「MAC 位址」。</li>
+        <li>
+          <strong>使用終端機</strong>：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 <code>Ethernet</code> 或對應外接轉接卡的 <code>Ethernet Address</code>）：
+          <pre><code>networksetup -listallhardwareports</code></pre>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">6</div><div class="step-title">依照真實情況去做填寫</div></div>
+    <a class="img-link" href="./圖檔/圖片19.png" target="_blank"><img src="./圖檔/圖片19.png" alt="圖19" loading="lazy" /></a>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">7</div><div class="step-title">完成後，點擊「IP與MAC」，接著點擊「設備(MAC)管理」</div></div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">8</div><div class="step-title">接著點擊連結符號連結裝置</div></div>
+    <a class="img-link" href="./圖檔/圖片20.png" target="_blank"><img src="./圖檔/圖片20.png" alt="圖20" loading="lazy" /></a>
+  </div>
+
+  <!-- ── 第參章 ── -->
+  <h2 id="ch3">第參章　相關連結</h2>
+
+  <h3>網路組連結</h3>
+  <a class="img-link" href="https://line.me/R/ti/p/@222dnqse" target="_blank" rel="noopener">
+    <img src="./圖檔/圖片21.png" alt="網路組連結" loading="lazy" />
+  </a>
+
+  <h3>電力系統</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>電力首頁</th>
+          <th>客服中心</th>
+          <th>啟用電力</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="北科-智慧電力計費管理系統網頁平台操作手冊（學生）.pdf" target="_blank">簡報</a></td>
+          <td><a href="https://www.aotech.tw/ntut" target="_blank" rel="noopener"><img src="./圖檔/圖片22.png" alt="電力首頁" /></a></td>
+          <td><a href="https://www.aotech.tw/ntut/content_us.php" target="_blank" rel="noopener"><img src="./圖檔/圖片23.png" alt="客服中心" /></a></td>
+          <td><a href="https://www.aotech.tw/ntut_power" target="_blank" rel="noopener"><img src="./圖檔/圖片24.png" alt="啟用電力" /></a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- end .container -->
+
+<footer>
+  <p>北科大宿舍有線網路攻略 &mdash; <a href="https://github.com/ZoeChengYu/ntut_eastdorm_Ethernet_Guide" target="_blank" rel="noopener">ntut_eastdorm_Ethernet_Guide</a></p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>北科大宿舍有線網路攻略</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Highlight.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    
+    <style>
+        :root {
+            --bg-gradient: radial-gradient(ellipse at top, #1e1b4b, #0f172a, #020617);
+            --card-bg: rgba(15, 23, 42, 0.65);
+            --sidebar-bg: rgba(15, 23, 42, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --accent-glow: rgba(99, 102, 241, 0.15);
+            --tip-color: #10b981;
+            --note-color: #0ea5e9;
+            --warning-color: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans TC', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* App Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Table of Contents */
+        .sidebar {
+            width: 320px;
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #a5b4fc, #818cf8, #6366f1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .toc-item {
+            list-style: none;
+            margin-bottom: 8px;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 10px 14px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .toc-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            padding-left: 18px;
+        }
+
+        .toc-link.active {
+            background: var(--accent-glow);
+            color: #a5b4fc;
+            font-weight: 500;
+            border-left: 3px solid var(--accent-color);
+            padding-left: 18px;
+        }
+
+        .toc-depth-2 { margin-left: 0px; font-weight: 500; color: #cbd5e1; }
+        .toc-depth-3 { margin-left: 12px; font-size: 0.85rem; }
+        .toc-depth-4 { margin-left: 24px; font-size: 0.8rem; }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 320px;
+            padding: 40px 60px;
+            max-width: 1200px;
+            width: calc(100% - 320px);
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Typography & Markdown Styles */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 1.8em;
+            margin-bottom: 0.6em;
+            scroll-margin-top: 100px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 60%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h2::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        h3 { font-size: 1.3rem; color: #cbd5e1; }
+        h4 { font-size: 1.1rem; color: #94a3b8; }
+        h5 { font-size: 1rem; color: #cbd5e1; }
+
+        p {
+            margin-bottom: 1.2em;
+            color: #cbd5e1;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        a {
+            color: #818cf8;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(129, 140, 248, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        a:hover {
+            color: #a5b4fc;
+            border-bottom-style: solid;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin-bottom: 1.2em;
+            padding-left: 24px;
+            color: #cbd5e1;
+        }
+
+        li {
+            margin-bottom: 0.4em;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        th {
+            background: rgba(99, 102, 241, 0.1);
+            color: #a5b4fc;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        /* Alert Banners (Blockquotes) */
+        blockquote {
+            margin: 20px 0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .alert-banner {
+            margin: 20px 0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent-color);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .alert-banner.note {
+            border-left-color: var(--note-color);
+            background: rgba(14, 165, 233, 0.05);
+        }
+        .alert-banner.tip {
+            border-left-color: var(--tip-color);
+            background: rgba(16, 181, 129, 0.05);
+        }
+        .alert-banner.warning {
+            border-left-color: var(--warning-color);
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .alert-header {
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+        }
+        .alert-banner.note .alert-header { color: var(--note-color); }
+        .alert-banner.tip .alert-header { color: var(--tip-color); }
+        .alert-banner.warning .alert-header { color: var(--warning-color); }
+
+        /* Code Blocks */
+        pre {
+            position: relative;
+            background: #090d16 !important;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        :not(pre) > code {
+            background: rgba(255, 255, 255, 0.08);
+            color: #f472b6;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .code-container {
+            position: relative;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+        }
+
+        /* Images and Gallery styling */
+        p img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 15px 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: zoom-in;
+        }
+
+        p img:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Grid for side-by-side images */
+        .image-table {
+            margin: 24px 0;
+            border: none;
+        }
+        .image-table td {
+            border: none;
+            padding: 10px;
+            vertical-align: top;
+            width: 33.33%;
+        }
+        .image-table img {
+            width: 100%;
+            margin: 0;
+        }
+
+        /* Light/Dark Toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            background: var(--accent-hover);
+        }
+
+        /* Mobile Hamburger Menu */
+        .mobile-header {
+            display: none;
+            height: 60px;
+            background: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 990;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Image Zoom Modal Overlay */
+        .zoom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.95);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .zoom-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .zoom-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .zoom-modal.show img {
+            transform: scale(1);
+        }
+
+        /* Light Theme Styles */
+        body.light {
+            --bg-gradient: radial-gradient(ellipse at top, #f0f2f5, #e2e8f0, #cbd5e1);
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --sidebar-bg: rgba(248, 250, 252, 0.95);
+            --border-color: rgba(0, 0, 0, 0.08);
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --accent-color: #4f46e5;
+            --accent-hover: #3730a3;
+            --accent-glow: rgba(79, 70, 229, 0.08);
+        }
+
+        body.light p { color: #334155; }
+        body.light h2::before { background: var(--accent-color); }
+        body.light h3 { color: #1e293b; }
+        body.light h4 { color: #475569; }
+        body.light h5 { color: #1e293b; }
+        body.light td, body.light th { border-color: rgba(0, 0, 0, 0.08); }
+        body.light tr:nth-child(even) { background: rgba(0, 0, 0, 0.01); }
+        body.light pre { background: #f8fafc !important; border-color: rgba(0, 0, 0, 0.08); }
+        body.light :not(pre) > code { background: rgba(0, 0, 0, 0.05); color: #db2777; }
+        body.light blockquote { background: rgba(0, 0, 0, 0.02); }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 100px 20px 40px;
+            }
+            .mobile-header {
+                display: flex;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 99;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-card {
+                padding: 24px 16px;
+            }
+            h1 { font-size: 1.8rem; }
+            h2 { font-size: 1.35rem; }
+            .image-table td {
+                display: block;
+                width: 100%;
+                padding: 8px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <button class="menu-toggle" id="menuToggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <span style="font-weight:700; background: linear-gradient(135deg, #a5b4fc, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">北科大宿舍有線網路攻略</span>
+        <div style="width:24px;"></div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fa-solid fa-ethernet"></i>
+                    <span>有線網路攻略</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul id="toc-list">
+                    <!-- TOC injected here by JS -->
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <article class="content-card markdown-body" id="rendered-content">
+                <h1>北科大宿舍有線網路攻略(ntut_eastdorm_Ethernet_Guide)</h1>
+<h2>第零章	前置作業</h2>
+<p>在你連上優質又穩定的宿網之前，你必須確認你準備的電腦是否有 RJ45 網孔（如下<a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%871.jpg">圖 1</a>）以及網路線（如下<a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%872.jpg">圖 2</a>，若是桌上型電腦 PC，建議網路線長度超過 3m）。若電腦沒有 RJ45 網孔，請先購買 USB-C / Type-C 轉 RJ45 網路轉接頭；若沒有網路線，請先購買網路線（建議購買 Cat5e 或 Cat6 等規格的網路線以支援 Giga 級網速）。</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%871.jpg"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%871.jpg" alt="圖1" style="max-width: 100%;"></a></th>
+<th align="center"><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%872.jpg"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%872.jpg" alt="圖2" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">圖 1</td>
+<td align="center">圖 2</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2>第壹章	網際網路設定</h2>
+<h3>方法一：使用圖形化介面 (GUI)</h3>
+<h4>步驟 1 ：先開啟 Windows「設定」</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%873.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%873.png" alt="圖3" style="max-width: 100%;"></a></p>
+<h4>步驟 2 ：點選「網路與網際網路」，接著點選「乙太網路」</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%874.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%874.png" alt="圖4" style="max-width: 100%;"></a></p>
+<h4>步驟 3 ：在「IP 指派」點選「編輯」</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%875.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%875.png" alt="圖5" style="max-width: 100%;"></a></p>
+<h4>步驟 4 ：將「編輯 IP 設定」從「自動 (DHCP)」切換為「手動」</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%876.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%876.png" alt="圖6" style="max-width: 100%;"></a></p>
+<h4>步驟 5 ：開啟「IPv4」選項，「IPv6」請保持關閉</h4>
+<h4>步驟 6 ：依照宿網設定填寫 IP 位址、子網路遮罩、閘道與 DNS，並按儲存</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%877.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%877.png" alt="圖7" style="max-width: 100%;"></a></p>
+<h3>方法二：Windows 系統 — 使用命令提示字元 (CMD) 【使用 .bat 檔自動設定】</h3>
+<h4>步驟 1 ：將指令複製到記事本</h4>
+<h5>第一種打法</h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">netsh interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} 
+netsh interface ip <span class="pl-c1">set</span> dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.13.1 
+netsh interface ip add dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> 140.124.13.2 index=2</pre></div>
+<p>假設IP位址為140.124.131.120則我需要這樣打</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">netsh interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.131.120 255.255.255.0 140.124.131.254 
+netsh interface ip <span class="pl-c1">set</span> dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.13.1 
+netsh interface ip add dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> 140.124.13.2 index=2</pre></div>
+<h5>第二種打法(推薦)</h5>
+<div class="highlight highlight-source-shell"><pre class="notranslate">@echo off
+:: 確保指令路徑正確，避免環境變數問題
+SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">\n</span>etsh.exe
+<span class="pl-c1">echo</span> [1/3] 正在設定靜態 IP ...
+%CMD_NETSH% interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
+<span class="pl-c1">echo</span> [2/3] 正在設定主要 DNS ...
+%CMD_NETSH% interface ip <span class="pl-c1">set</span> dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.13.1
+<span class="pl-c1">echo</span> [3/3] 正在設定次要 DNS ...
+%CMD_NETSH% interface ip add dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> 140.124.13.2 index=2
+echo.
+<span class="pl-c1">echo</span> 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span>
+pause</pre></div>
+<p>假設IP位址為140.124.131.120則我需要這樣打</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">@echo off
+:: 確保指令路徑正確，避免環境變數問題
+SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">\n</span>etsh.exe
+<span class="pl-c1">echo</span> [1/3] 正在設定靜態 IP ...
+%CMD_NETSH% interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.131.120 255.255.255.0 140.124.131.254
+<span class="pl-c1">echo</span> [2/3] 正在設定主要 DNS ...
+%CMD_NETSH% interface ip <span class="pl-c1">set</span> dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.13.1
+<span class="pl-c1">echo</span> [3/3] 正在設定次要 DNS ...
+%CMD_NETSH% interface ip add dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> 140.124.13.2 index=2
+echo.
+<span class="pl-c1">echo</span> 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span>
+pause</pre></div>
+<h5>附錄：使用DHCP(動態分配IP)打法【宿舍不能用】</h5>
+<blockquote>
+<p>只有這個使用UTF-8也沒問題</p>
+</blockquote>
+<div class="highlight highlight-source-shell"><pre class="notranslate">@echo off
+chcp 65001
+:: 確保指令路徑正確，避免環境變數問題
+SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">\n</span>etsh.exe
+<span class="pl-c1">echo</span> [1/2] 正在設定動態 IP ...
+netsh interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> source=dhcp
+<span class="pl-c1">echo</span> [2/2] 正在設定動態取得 DNS ...
+netsh interface ip <span class="pl-c1">set</span> dns name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> source=dhcp
+<span class="pl-c1">echo</span> 已恢復為自動取得 IP。
+echo.
+<span class="pl-c1">echo</span> 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span>
+pause</pre></div>
+<h4>步驟 2 ：以 ANSI 編碼方式儲存檔案</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%878.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%878.png" alt="圖8" style="max-width: 100%;"></a></p>
+<h4>步驟 3 ：將副檔名從 .txt 改成 .bat</h4>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%879.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%879.png" alt="圖9" style="max-width: 100%;"></a></th>
+<th align="center"><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8710.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8710.png" alt="圖10" style="max-width: 100%;"></a></th>
+<th align="center"><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8711.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8711.png" alt="圖11" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">圖 9</td>
+<td align="center">圖 10</td>
+<td align="center">圖 11</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h4>步驟 4 ：以系統管理員身分執行該檔案</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8712.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8712.png" alt="圖12" style="max-width: 100%;"></a></p>
+<h4>步驟 5 ：看到 CMD 視窗顯示設定完成即完成設定</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8713.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8713.png" alt="圖13" style="max-width: 100%;"></a></p>
+<hr>
+<h3>方法三：Linux / macOS 系統 — 使用終端機 (Terminal) 【直接執行指令】</h3>
+<h4>Linux 系統 (使用 nmcli)</h4>
+<p>多數現代 Linux 發行版 (如 Ubuntu, Debian, Fedora, Arch) 皆預設使用 NetworkManager，因此推薦使用 <code class="notranslate">nmcli</code> 命令列工具。</p>
+<ol>
+<li>
+<p><strong>查詢網路卡連線名稱</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">nmcli connection show</pre></div>
+<p>請記下你要設定的有線網路連線名稱（中文系統通常為 <code class="notranslate">有線連線 1</code>，英文系統為 <code class="notranslate">Wired connection 1</code>，以下以 <code class="notranslate">"有線連線 1"</code> 為例）。</p>
+</li>
+<li>
+<p><strong>設定靜態 IP、閘道與 DNS</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate"><span class="pl-c"><span class="pl-c">#</span> 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)</span>
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.addresses {你的IP位址}/24
+
+<span class="pl-c"><span class="pl-c">#</span> 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)</span>
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.gateway {你的IP位址的末碼改成254}
+
+<span class="pl-c"><span class="pl-c">#</span> 設定主要與次要 DNS 伺服器</span>
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.dns <span class="pl-s"><span class="pl-pds">"</span>140.124.13.1 140.124.13.2<span class="pl-pds">"</span></span>
+
+<span class="pl-c"><span class="pl-c">#</span> 設定為手動 (靜態) 模式</span>
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.method manual</pre></div>
+<p>例如IP位址為140.124.131.120則我需要這樣打</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.addresses 140.124.131.120/24
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.gateway 140.124.131.254
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.dns <span class="pl-s"><span class="pl-pds">"</span>140.124.13.1 140.124.13.2<span class="pl-pds">"</span></span>
+sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.method manual</pre></div>
+</li>
+<li>
+<p><strong>重新啟動網路連線以套用設定</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmcli connection down <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span>
+sudo nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span></pre></div>
+</li>
+<li>
+<p><strong>恢復自動取得 IP (DHCP) [宿舍有線網路不能用]</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo nmcli connection modify <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span> ipv4.method auto
+sudo nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>有線連線 1<span class="pl-pds">"</span></span></pre></div>
+</li>
+</ol>
+<h4>macOS 系統 (使用 networksetup)</h4>
+<p>macOS 系統可以使用內建的 <code class="notranslate">networksetup</code> 指令進行設定。</p>
+<ol>
+<li>
+<p><strong>查詢網路服務名稱</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">networksetup -listallnetworkservices</pre></div>
+<p>請記下你的有線網路服務名稱 (通常為 <code class="notranslate">Ethernet</code> 或 <code class="notranslate">AX88179A</code> 等外接轉接卡名稱，以下以 <code class="notranslate">"Ethernet"</code> 為例)。</p>
+</li>
+<li>
+<p><strong>設定靜態 IP、子網路遮罩與閘道</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo networksetup -setmanual <span class="pl-s"><span class="pl-pds">"</span>Ethernet<span class="pl-pds">"</span></span> {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}</pre></div>
+</li>
+<li>
+<p><strong>設定主要與次要 DNS</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo networksetup -setdnsservers <span class="pl-s"><span class="pl-pds">"</span>Ethernet<span class="pl-pds">"</span></span> 140.124.13.1 140.124.13.2</pre></div>
+</li>
+<li>
+<p><strong>恢復自動取得 IP (DHCP) [宿舍有線網路不能用]</strong>：</p>
+<div class="highlight highlight-source-shell"><pre class="notranslate">sudo networksetup -setdhcp <span class="pl-s"><span class="pl-pds">"</span>Ethernet<span class="pl-pds">"</span></span></pre></div>
+</li>
+</ol>
+<h2>第貳章	登錄裝置與連結IP</h2>
+<h4>步驟1 ：首先，請先登錄校園入口網站</h4>
+<h4>步驟2 ：點擊「網路管理」，接著點擊網路與資訊安全管理系統</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8714.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8714.png" alt="圖14" style="max-width: 100%;"></a></p>
+<h4>步驟3 ：完成點擊之後，自動新開分頁「網路與資訊安全管理系統」</h4>
+<h4>步驟4 ：點擊「IP與MAC」，接著點擊「設備(MAC)管理」</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8715.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8715.png" alt="圖15" style="max-width: 100%;"></a></p>
+<h4>步驟5 ：點擊「新增」</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8716.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8716.png" alt="圖16" style="max-width: 100%;"></a></p>
+<div class="markdown-alert markdown-alert-tip"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p><strong>如何取得網路卡實體位址 (MAC Address)？</strong></p>
+<p><strong>Windows 系統：</strong></p>
+<ol>
+<li><strong>使用圖形化介面 (GUI)</strong>：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。<br>
+<a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8717.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8717.png" alt="圖17" style="max-width: 100%;"></a></li>
+<li><strong>使用命令提示字元 (CMD)</strong>：輸入 <code class="notranslate">getmac /v /fo list</code> 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。
+<div class="highlight highlight-source-shell"><pre class="notranslate">getmac /v /fo list</pre></div>
+<a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8718.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8718.png" alt="圖18" style="max-width: 100%;"></a></li>
+</ol>
+<p><strong>Linux 系統：</strong></p>
+<ol>
+<li><strong>使用終端機</strong>：開啟終端機輸入 <code class="notranslate">ip link show</code> 指令，找到有線網卡（通常以 <code class="notranslate">en</code> 或 <code class="notranslate">eth</code> 開頭）下方的 <code class="notranslate">link/ether</code>，後面的 12 碼十六進位字元即為 MAC 位址。
+<div class="highlight highlight-source-shell"><pre class="notranslate">ip link show</pre></div>
+</li>
+</ol>
+<p><strong>macOS 系統：</strong></p>
+<ol>
+<li><strong>使用圖形化介面</strong>：點擊左上角「蘋果選單」  &gt;「系統設定」&gt;「網路」&gt; 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）&gt; 點擊「詳細資訊...」&gt; 點擊左側「硬體」，即可看到「MAC 位址」。</li>
+<li><strong>使用終端機</strong>：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 <code class="notranslate">Ethernet</code> 或對應外接轉接卡的 <code class="notranslate">Ethernet Address</code>）：
+<div class="highlight highlight-source-shell"><pre class="notranslate">networksetup -listallhardwareports</pre></div>
+</li>
+</ol>
+</div>
+<h4>步驟6 ：依照真實情況去做填寫</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8719.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8719.png" alt="圖19" style="max-width: 100%;"></a></p>
+<h4>步驟7 ：完成後，點擊「IP與MAC」，接著點擊「設備(MAC)管理」</h4>
+<h4>步驟8 ：接著點擊連結符號連結裝置</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8720.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8720.png" alt="圖20" style="max-width: 100%;"></a></p>
+<h2>第參章 相關連結</h2>
+<h3>網路組連結</h3>
+<p><a href="https://line.me/R/ti/p/@222dnqse" rel="nofollow"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8721.png" alt="網路組連結" style="max-width: 100%;"></a></p>
+<h3>電力系統</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center"><a target="_blank" rel="noopener noreferrer" href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8722.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8722.png" alt="電力首頁" style="max-width: 100%;"></a></th>
+<th align="center"><a target="_blank" rel="noopener noreferrer" href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8723.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8723.png" alt="客服中心" style="max-width: 100%;"></a></th>
+<th align="center"><a target="_blank" rel="noopener noreferrer" href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8724.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8724.png" alt="啟用電力" style="max-width: 100%;"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><a href="%E5%8C%97%E7%A7%91-%E6%99%BA%E6%85%A7%E9%9B%BB%E5%8A%9B%E8%A8%88%E8%B2%BB%E7%AE%A1%E7%90%86%E7%B3%BB%E7%B5%B1%E7%B6%B2%E9%A0%81%E5%B9%B3%E5%8F%B0%E6%93%8D%E4%BD%9C%E6%89%8B%E5%86%8A%EF%BC%88%E5%AD%B8%E7%94%9F%EF%BC%89.pdf">簡報</a></td>
+<td align="center"><a href="https://www.aotech.tw/ntut" rel="nofollow">首頁</a></td>
+<td align="center"><a href="https://www.aotech.tw/ntut/content_us.php" rel="nofollow">客服中心</a></td>
+<td align="center"><a href="https://www.aotech.tw/ntut_power" rel="nofollow">啟用電力</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+            </article>
+        </main>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" title="切換主題">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <!-- Image Zoom Modal -->
+    <div class="zoom-modal" id="zoomModal">
+        <img id="zoomedImage" src="" alt="放大圖檔">
+    </div>
+
+    <!-- Fallback Markdown Parser (Only runs if GitHub API call fails) -->
+    
+    <!-- HighlightJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const markdownContainer = document.getElementById('rendered-content');
+            
+            // 1. Fallback rendering if API failed
+            if (false) {
+                const rawMarkdown = `# 北科大宿舍有線網路攻略(ntut_eastdorm_Ethernet_Guide)\n\n## 第零章\t前置作業\n\n在你連上優質又穩定的宿網之前，你必須確認你準備的電腦是否有 RJ45 網孔（如下[圖 1](./圖檔/圖片1.jpg)）以及網路線（如下[圖 2](./圖檔/圖片2.jpg)，若是桌上型電腦 PC，建議網路線長度超過 3m）。若電腦沒有 RJ45 網孔，請先購買 USB-C / Type-C 轉 RJ45 網路轉接頭；若沒有網路線，請先購買網路線（建議購買 Cat5e 或 Cat6 等規格的網路線以支援 Giga 級網速）。\n\n| [![圖1](./圖檔/圖片1.jpg)](./圖檔/圖片1.jpg) | [![圖2](./圖檔/圖片2.jpg)](./圖檔/圖片2.jpg) |\n| :--: | :--: |\n| 圖 1 | 圖 2 |\n\n## 第壹章\t網際網路設定\n\n### 方法一：使用圖形化介面 (GUI)\n\n#### 步驟 1 ：先開啟 Windows「設定」\n\n[![圖3](./圖檔/圖片3.png)](./圖檔/圖片3.png)\n\n#### 步驟 2 ：點選「網路與網際網路」，接著點選「乙太網路」\n\n[![圖4](./圖檔/圖片4.png)](./圖檔/圖片4.png)\n\n#### 步驟 3 ：在「IP 指派」點選「編輯」\n\n[![圖5](./圖檔/圖片5.png)](./圖檔/圖片5.png)\n\n#### 步驟 4 ：將「編輯 IP 設定」從「自動 (DHCP)」切換為「手動」\n\n[![圖6](./圖檔/圖片6.png)](./圖檔/圖片6.png)\n\n#### 步驟 5 ：開啟「IPv4」選項，「IPv6」請保持關閉\n\n#### 步驟 6 ：依照宿網設定填寫 IP 位址、子網路遮罩、閘道與 DNS，並按儲存\n\n[![圖7](./圖檔/圖片7.png)](./圖檔/圖片7.png)\n\n### 方法二：Windows 系統 — 使用命令提示字元 (CMD) 【使用 .bat 檔自動設定】\n\n#### 步驟 1 ：將指令複製到記事本\n\n##### 第一種打法\n\n``` shell showLineNumbers\nnetsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} \nnetsh interface ip set dns name="乙太網路" static 140.124.13.1 \nnetsh interface ip add dns name="乙太網路" 140.124.13.2 index=2\n```\n\n假設IP位址為140.124.131.120則我需要這樣打\n\n``` shell showLineNumbers\nnetsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254 \nnetsh interface ip set dns name="乙太網路" static 140.124.13.1 \nnetsh interface ip add dns name="乙太網路" 140.124.13.2 index=2\n```\n\n##### 第二種打法(推薦)\n\n``` shell showLineNumbers\n@echo off\n:: 確保指令路徑正確，避免環境變數問題\nSET CMD_NETSH=C:\\Windows\\System32\\netsh.exe\necho [1/3] 正在設定靜態 IP ...\n%CMD_NETSH% interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}\necho [2/3] 正在設定主要 DNS ...\n%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1\necho [3/3] 正在設定次要 DNS ...\n%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2\necho.\necho 設定完成！檢查結果：\n%CMD_NETSH% interface ip show config name="乙太網路"\npause\n```\n\n假設IP位址為140.124.131.120則我需要這樣打\n\n``` shell showLineNumbers\n@echo off\n:: 確保指令路徑正確，避免環境變數問題\nSET CMD_NETSH=C:\\Windows\\System32\\netsh.exe\necho [1/3] 正在設定靜態 IP ...\n%CMD_NETSH% interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254\necho [2/3] 正在設定主要 DNS ...\n%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1\necho [3/3] 正在設定次要 DNS ...\n%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2\necho.\necho 設定完成！檢查結果：\n%CMD_NETSH% interface ip show config name="乙太網路"\npause\n```\n\n##### 附錄：使用DHCP(動態分配IP)打法【宿舍不能用】\n\n>\n>只有這個使用UTF-8也沒問題\n>\n\n``` shell showLineNumbers\n@echo off\nchcp 65001\n:: 確保指令路徑正確，避免環境變數問題\nSET CMD_NETSH=C:\\Windows\\System32\\netsh.exe\necho [1/2] 正在設定動態 IP ...\nnetsh interface ip set address name="乙太網路" source=dhcp\necho [2/2] 正在設定動態取得 DNS ...\nnetsh interface ip set dns name="乙太網路" source=dhcp\necho 已恢復為自動取得 IP。\necho.\necho 設定完成！檢查結果：\n%CMD_NETSH% interface ip show config name="乙太網路"\npause\n```\n\n#### 步驟 2 ：以 ANSI 編碼方式儲存檔案\n\n[![圖8](./圖檔/圖片8.png)](./圖檔/圖片8.png)\n\n#### 步驟 3 ：將副檔名從 .txt 改成 .bat\n\n[![圖9](./圖檔/圖片9.png)](./圖檔/圖片9.png) | [![圖10](./圖檔/圖片10.png)](./圖檔/圖片10.png) | [![圖11](./圖檔/圖片11.png)](./圖檔/圖片11.png) |\n| :--: | :--: | :--: |\n| 圖 9 | 圖 10 |  圖 11 |\n\n#### 步驟 4 ：以系統管理員身分執行該檔案\n\n[![圖12](./圖檔/圖片12.png)](./圖檔/圖片12.png)\n\n#### 步驟 5 ：看到 CMD 視窗顯示設定完成即完成設定\n\n[![圖13](./圖檔/圖片13.png)](./圖檔/圖片13.png)\n\n---\n\n### 方法三：Linux / macOS 系統 — 使用終端機 (Terminal) 【直接執行指令】\n\n#### Linux 系統 (使用 nmcli)\n\n多數現代 Linux 發行版 (如 Ubuntu, Debian, Fedora, Arch) 皆預設使用 NetworkManager，因此推薦使用 `nmcli` 命令列工具。\n\n1. **查詢網路卡連線名稱**：\n   ```shell\n   nmcli connection show\n   ```\n   請記下你要設定的有線網路連線名稱（中文系統通常為 `有線連線 1`，英文系統為 `Wired connection 1`，以下以 `"有線連線 1"` 為例）。\n\n2. **設定靜態 IP、閘道與 DNS**：\n   ```shell\n   # 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)\n   sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24\n   \n   # 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)\n   sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}\n   \n   # 設定主要與次要 DNS 伺服器\n   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"\n   \n   # 設定為手動 (靜態) 模式\n   sudo nmcli connection modify "有線連線 1" ipv4.method manual\n   ```\n\n   例如IP位址為140.124.131.120則我需要這樣打\n   \n   ```shell\n   sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24\n   sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254\n   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"\n   sudo nmcli connection modify "有線連線 1" ipv4.method manual\n   ```\n\n3. **重新啟動網路連線以套用設定**：\n   ```shell\n   sudo nmcli connection down "有線連線 1"\n   sudo nmcli connection up "有線連線 1"\n   ```\n\n4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：\n   ```shell\n   sudo nmcli connection modify "有線連線 1" ipv4.method auto\n   sudo nmcli connection up "有線連線 1"\n   ```\n\n#### macOS 系統 (使用 networksetup)\n\nmacOS 系統可以使用內建的 `networksetup` 指令進行設定。\n\n1. **查詢網路服務名稱**：\n   ```shell\n   networksetup -listallnetworkservices\n   ```\n   請記下你的有線網路服務名稱 (通常為 `Ethernet` 或 `AX88179A` 等外接轉接卡名稱，以下以 `"Ethernet"` 為例)。\n\n2. **設定靜態 IP、子網路遮罩與閘道**：\n   ```shell\n   sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}\n   ```\n\n3. **設定主要與次要 DNS**：\n   ```shell\n   sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2\n   ```\n\n4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：\n   ```shell\n   sudo networksetup -setdhcp "Ethernet"\n   ```\n\n## 第貳章\t登錄裝置與連結IP\n\n#### 步驟1 ：首先，請先登錄校園入口網站\n\n#### 步驟2 ：點擊「網路管理」，接著點擊網路與資訊安全管理系統\n\n[![圖14](./圖檔/圖片14.png)](./圖檔/圖片14.png)\n\n#### 步驟3 ：完成點擊之後，自動新開分頁「網路與資訊安全管理系統」\n\n#### 步驟4 ：點擊「IP與MAC」，接著點擊「設備(MAC)管理」\n\n[![圖15](./圖檔/圖片15.png)](./圖檔/圖片15.png)\n\n#### 步驟5 ：點擊「新增」\n\n[![圖16](./圖檔/圖片16.png)](./圖檔/圖片16.png)\n\n> [!TIP]\n> **如何取得網路卡實體位址 (MAC Address)？**\n>\n> **Windows 系統：**\n> 1. **使用圖形化介面 (GUI)**：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。\n>    [![圖17](./圖檔/圖片17.png)](./圖檔/圖片17.png)\n> 2. **使用命令提示字元 (CMD)**：輸入 `getmac /v /fo list` 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。\n>    ```shell\n>    getmac /v /fo list\n>    ```\n>    [![圖18](./圖檔/圖片18.png)](./圖檔/圖片18.png)\n>\n> **Linux 系統：**\n> 1. **使用終端機**：開啟終端機輸入 `ip link show` 指令，找到有線網卡（通常以 `en` 或 `eth` 開頭）下方的 `link/ether`，後面的 12 碼十六進位字元即為 MAC 位址。\n>    ```shell\n>    ip link show\n>    ```\n>\n> **macOS 系統：**\n> 1. **使用圖形化介面**：點擊左上角「蘋果選單」 \uf8ff >「系統設定」>「網路」> 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）> 點擊「詳細資訊...」> 點擊左側「硬體」，即可看到「MAC 位址」。\n> 2. **使用終端機**：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 `Ethernet` 或對應外接轉接卡的 `Ethernet Address`）：\n>    ```shell\n>    networksetup -listallhardwareports\n>    ```\n\n#### 步驟6 ：依照真實情況去做填寫\n\n[![圖19](./圖檔/圖片19.png)](./圖檔/圖片19.png)\n\n#### 步驟7 ：完成後，點擊「IP與MAC」，接著點擊「設備(MAC)管理」\n\n#### 步驟8 ：接著點擊連結符號連結裝置\n\n[![圖20](./圖檔/圖片20.png)](./圖檔/圖片20.png)\n\n## 第參章 相關連結\n\n### 網路組連結\n\n[![網路組連結](./圖檔/圖片21.png)](https://line.me/R/ti/p/@222dnqse)\n\n### 電力系統\n|  | ![電力首頁](./圖檔/圖片22.png) | ![客服中心](./圖檔/圖片23.png) | ![啟用電力](./圖檔/圖片24.png) |\n| :-: | :-: | :-: | :-: |\n| [簡報](北科-智慧電力計費管理系統網頁平台操作手冊（學生）.pdf) | [首頁](https://www.aotech.tw/ntut) | [客服中心](https://www.aotech.tw/ntut/content_us.php) | [啟用電力](https://www.aotech.tw/ntut_power) |`; // Escaped raw string
+                markdownContainer.innerHTML = marked.parse(rawMarkdown);
+            }
+
+            // 2. Alert Box styling helper (replaces [!NOTE], [!TIP], etc.)
+            function processAlerts() {
+                const blockquotes = markdownContainer.querySelectorAll('blockquote');
+                blockquotes.forEach(bq => {
+                    const html = bq.innerHTML;
+                    const match = html.trim().match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]/i);
+                    if (match) {
+                        const type = match[1].toLowerCase();
+                        let icon = 'fa-info-circle';
+                        let title = '附註';
+                        
+                        if (type === 'tip') {
+                            icon = 'fa-lightbulb';
+                            title = '提示';
+                        } else if (type === 'warning' || type === 'caution') {
+                            icon = 'fa-exclamation-triangle';
+                            title = '警告';
+                        } else if (type === 'important') {
+                            icon = 'fa-circle-exclamation';
+                            title = '重要';
+                        }
+                        
+                        const processedHtml = html.replace(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*/i, '');
+                        
+                        const div = document.createElement('div');
+                        div.className = `alert-banner ${type}`;
+                        div.innerHTML = `
+                            <div class="alert-header">
+                                <i class="fa-solid ${icon}"></i> ${title}
+                            </div>
+                            <div>${processedHtml}</div>
+                        `;
+                        bq.replaceWith(div);
+                    }
+                });
+            }
+            processAlerts();
+
+            // 3. Highlight.js initiation
+            hljs.highlightAll();
+
+            // 4. Wrap code blocks with containers & copy buttons
+            const codeBlocks = markdownContainer.querySelectorAll('pre');
+            codeBlocks.forEach(pre => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'code-container';
+                pre.parentNode.insertBefore(wrapper, pre);
+                wrapper.appendChild(pre);
+
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> 複製';
+                wrapper.appendChild(copyBtn);
+
+                copyBtn.addEventListener('click', async () => {
+                    const code = pre.querySelector('code').innerText;
+                    try {
+                        await navigator.clipboard.writeText(code);
+                        copyBtn.innerHTML = '<i class="fa-solid fa-check" style="color: #10b981"></i> 已複製';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> 複製';
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Failed to copy!', err);
+                    }
+                });
+            });
+
+            // 5. Image ZOOM functionality
+            const zoomModal = document.getElementById('zoomModal');
+            const zoomedImage = document.getElementById('zoomedImage');
+            
+            markdownContainer.querySelectorAll('img').forEach(img => {
+                img.addEventListener('click', () => {
+                    zoomedImage.src = img.src;
+                    zoomModal.classList.add('show');
+                });
+            });
+
+            zoomModal.addEventListener('click', () => {
+                zoomModal.classList.remove('show');
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && zoomModal.classList.contains('show')) {
+                    zoomModal.classList.remove('show');
+                }
+            });
+
+            // 6. Dynamic Table of Contents (TOC) builder
+            const headers = markdownContainer.querySelectorAll('h1, h2, h3, h4');
+            const tocList = document.getElementById('toc-list');
+            
+            headers.forEach((header, index) => {
+                const text = header.innerText.replace(/^[#\s]+/, '');
+                const id = `heading-${index}`;
+                header.id = id;
+
+                const li = document.createElement('li');
+                li.className = 'toc-item';
+
+                const a = document.createElement('a');
+                a.href = `#${id}`;
+                
+                let depthClass = 'toc-depth-2';
+                if (header.tagName === 'H3') depthClass = 'toc-depth-3';
+                else if (header.tagName === 'H4') depthClass = 'toc-depth-4';
+                
+                a.className = `toc-link ${depthClass}`;
+                a.innerText = text;
+                a.title = text;
+                
+                li.appendChild(a);
+                tocList.appendChild(li);
+            });
+
+            // 7. Active TOC link highlight on scroll
+            const tocLinks = document.querySelectorAll('.toc-link');
+            
+            const handleScroll = () => {
+                let currentActiveId = '';
+                const scrollPos = window.scrollY + 120;
+
+                headers.forEach(header => {
+                    if (scrollPos >= header.offsetTop) {
+                        currentActiveId = header.id;
+                    }
+                });
+
+                tocLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${currentActiveId}`) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            };
+            window.addEventListener('scroll', handleScroll);
+            handleScroll();
+
+            // 8. Mobile Sidebar drawer controls
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            const toggleSidebar = () => {
+                sidebar.classList.toggle('active');
+                sidebarOverlay.classList.toggle('active');
+            };
+
+            menuToggle.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            });
+
+            // 9. Light/Dark Theme toggler
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            
+            // Check localStorage
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            if (savedTheme === 'light') {
+                body.classList.add('light');
+                themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('light');
+                const isLight = body.classList.contains('light');
+                localStorage.setItem('theme', isLight ? 'light' : 'dark');
+                themeToggle.innerHTML = isLight ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            });
+        });
+    </script>
+</body>
+</html>
