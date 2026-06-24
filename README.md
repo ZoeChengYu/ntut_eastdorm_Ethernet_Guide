@@ -40,7 +40,7 @@
 
 ##### 第一種打法
 
-``` shell showLineNumbers
+```shell
 netsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} 
 netsh interface ip set dns name="乙太網路" static 140.124.13.1 
 netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
@@ -48,7 +48,7 @@ netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
 
 假設IP位址為140.124.131.120則我需要這樣打
 
-``` shell showLineNumbers
+```shell
 netsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254 
 netsh interface ip set dns name="乙太網路" static 140.124.13.1 
 netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
@@ -56,7 +56,7 @@ netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
 
 ##### 第二種打法(推薦)
 
-``` shell showLineNumbers
+```shell
 @echo off
 :: 確保指令路徑正確，避免環境變數問題
 SET CMD_NETSH=C:\Windows\System32\netsh.exe
@@ -74,7 +74,7 @@ pause
 
 假設IP位址為140.124.131.120則我需要這樣打
 
-``` shell showLineNumbers
+```shell
 @echo off
 :: 確保指令路徑正確，避免環境變數問題
 SET CMD_NETSH=C:\Windows\System32\netsh.exe
@@ -92,11 +92,9 @@ pause
 
 ##### 附錄：使用DHCP(動態分配IP)打法【宿舍不能用】
 
->
->只有這個使用UTF-8也沒問題
->
+> 只有這個使用UTF-8也沒問題
 
-``` shell showLineNumbers
+```shell
 @echo off
 chcp 65001
 :: 確保指令路徑正確，避免環境變數問題
@@ -118,9 +116,9 @@ pause
 
 #### 步驟 3 ：將副檔名從 .txt 改成 .bat
 
-[![圖9](./圖檔/圖片9.png)](./圖檔/圖片9.png) | [![圖10](./圖檔/圖片10.png)](./圖檔/圖片10.png) | [![圖11](./圖檔/圖片11.png)](./圖檔/圖片11.png) |
-| :--: | :--: | :--: |
-| 圖 9 | 圖 10 |  圖 11 |
+| [![圖9](./圖檔/圖片9.png)](./圖檔/圖片9.png) | [![圖10](./圖檔/圖片10.png)](./圖檔/圖片10.png) | [![圖11](./圖檔/圖片11.png)](./圖檔/圖片11.png) |
+| :-------------------------------------: | :----------------------------------------: | :----------------------------------------: |
+|                  圖 9                  |                   圖 10                   |                   圖 11                   |
 
 #### 步驟 4 ：以系統管理員身分執行該檔案
 
@@ -139,42 +137,44 @@ pause
 多數現代 Linux 發行版 (如 Ubuntu, Debian, Fedora, Arch) 皆預設使用 NetworkManager，因此推薦使用 `nmcli` 命令列工具。
 
 1. **查詢網路卡連線名稱**：
+
    ```shell
    nmcli connection show
    ```
-   請記下你要設定的有線網路連線名稱（中文系統通常為 `有線連線 1`，英文系統為 `Wired connection 1`，以下以 `"有線連線 1"` 為例）。
 
+   請記下你要設定的有線網路連線名稱（中文系統通常為 `有線連線 1`，英文系統為 `Wired connection 1`，以下以 `"有線連線 1"` 為例）。
 2. **設定靜態 IP、閘道與 DNS**：
+
    ```shell
    # 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)
    sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24
-   
+
    # 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)
    sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}
-   
+
    # 設定主要與次要 DNS 伺服器
    sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
-   
+
    # 設定為手動 (靜態) 模式
    sudo nmcli connection modify "有線連線 1" ipv4.method manual
    ```
 
    例如IP位址為140.124.131.120則我需要這樣打
-   
+
    ```shell
    sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24
    sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254
    sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
    sudo nmcli connection modify "有線連線 1" ipv4.method manual
    ```
-
 3. **重新啟動網路連線以套用設定**：
+
    ```shell
    sudo nmcli connection down "有線連線 1"
    sudo nmcli connection up "有線連線 1"
    ```
-
 4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：
+
    ```shell
    sudo nmcli connection modify "有線連線 1" ipv4.method auto
    sudo nmcli connection up "有線連線 1"
@@ -185,27 +185,53 @@ pause
 macOS 系統可以使用內建的 `networksetup` 指令進行設定。
 
 1. **查詢網路服務名稱**：
+
    ```shell
    networksetup -listallnetworkservices
    ```
-   請記下你的有線網路服務名稱 (通常為 `Ethernet` 或 `AX88179A` 等外接轉接卡名稱，以下以 `"Ethernet"` 為例)。
 
+   請記下你的有線網路服務名稱 (通常為 `Ethernet` 或 `AX88179A` 等外接轉接卡名稱，以下以 `"Ethernet"` 為例)。
 2. **設定靜態 IP、子網路遮罩與閘道**：
+
    ```shell
    sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
    ```
-
 3. **設定主要與次要 DNS**：
+
    ```shell
    sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2
    ```
-
 4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：
+
    ```shell
    sudo networksetup -setdhcp "Ethernet"
    ```
 
-## 第貳章	登錄裝置與連結IP
+## 第貳章   無線網路設定
+在我們的宿舍裡，只有交誼廳才能使用北科大的 Wi-Fi，房間內以及走廊是沒有 Wi-Fi 訊號的，因此我們需要走出房間來到交誼廳使用Wi-Fi，以進行下一章的登錄裝置與連結IP(只有第一次使用需這樣處理)
+### Wi-Fi：NTUT
+這是最簡單使用北科大提供的無線網路的方法，只需要在瀏覽器彈窗登入帳號密碼即可，每次使用每次都要登入
+#### 步驟1 ：首先點擊右下角的網路與音訊主菜單介面，接著點擊Wi-Fi按鍵右半邊，以進入Wi-Fi連線介面
+[![圖25](./圖檔/圖片25.png)](./圖檔/圖片25.png)
+#### 步驟2 ：進入Wi-Fi連線介面後，選擇你要連線的Wi-Fi，然後按連線
+[![圖26](./圖檔/圖片26.png)](./圖檔/圖片26.png
+)
+#### 步驟3 ：等個幾秒，瀏覽器自動跳出一個彈窗，請點擊繼續造訪網頁
+[![圖27](./圖檔/圖片27.png)](./圖檔/圖片27.png
+)
+#### 步驟4 ：看到這個登入畫面後，輸入校務系統的帳號及密碼後即可正常使用
+[![圖28](./圖檔/圖片28.png)](./圖檔/圖片28.png
+)
+
+### Wi-Fi：NTUT-802.1x & eduroam 教學
+請看計算機與網路中心的安裝教學：[https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw](https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw)
+
+> [!NOTE]
+>Android也算是一種Linux，因此Linux的設定方法請看Android設定方式。
+
+### VPN
+
+## 第參章	登錄裝置與連結IP
 
 #### 步驟1 ：首先，請先登錄校園入口網站
 
@@ -227,21 +253,25 @@ macOS 系統可以使用內建的 `networksetup` 指令進行設定。
 > **如何取得網路卡實體位址 (MAC Address)？**
 >
 > **Windows 系統：**
+>
 > 1. **使用圖形化介面 (GUI)**：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。
 >    [![圖17](./圖檔/圖片17.png)](./圖檔/圖片17.png)
 > 2. **使用命令提示字元 (CMD)**：輸入 `getmac /v /fo list` 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。
 >    ```shell
 >    getmac /v /fo list
 >    ```
+>
 >    [![圖18](./圖檔/圖片18.png)](./圖檔/圖片18.png)
 >
 > **Linux 系統：**
+>
 > 1. **使用終端機**：開啟終端機輸入 `ip link show` 指令，找到有線網卡（通常以 `en` 或 `eth` 開頭）下方的 `link/ether`，後面的 12 碼十六進位字元即為 MAC 位址。
 >    ```shell
 >    ip link show
 >    ```
 >
 > **macOS 系統：**
+>
 > 1. **使用圖形化介面**：點擊左上角「蘋果選單」  >「系統設定」>「網路」> 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）> 點擊「詳細資訊...」> 點擊左側「硬體」，即可看到「MAC 位址」。
 > 2. **使用終端機**：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 `Ethernet` 或對應外接轉接卡的 `Ethernet Address`）：
 >    ```shell
@@ -258,13 +288,14 @@ macOS 系統可以使用內建的 `networksetup` 指令進行設定。
 
 [![圖20](./圖檔/圖片20.png)](./圖檔/圖片20.png)
 
-## 第參章 相關連結
+## 第肆章 相關連結
 
 ### 網路組連結
 
 [![網路組連結](./圖檔/圖片21.png)](https://line.me/R/ti/p/@222dnqse)
 
 ### 電力系統
-|  | ![電力首頁](./圖檔/圖片22.png) | ![客服中心](./圖檔/圖片23.png) | ![啟用電力](./圖檔/圖片24.png) |
-| :-: | :-: | :-: | :-: |
+
+|                                                            |  ![電力首頁](./圖檔/圖片22.png)  |            ![客服中心](./圖檔/圖片23.png)            |       ![啟用電力](./圖檔/圖片24.png)       |
+| :--------------------------------------------------------: | :-----------------------------: | :------------------------------------------------: | :---------------------------------------: |
 | [簡報](北科-智慧電力計費管理系統網頁平台操作手冊（學生）.pdf) | [首頁](https://www.aotech.tw/ntut) | [客服中心](https://www.aotech.tw/ntut/content_us.php) | [啟用電力](https://www.aotech.tw/ntut_power) |
