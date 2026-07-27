@@ -601,7 +601,8 @@ netsh interface ip add dns name=<span class="pl-s"><span class="pl-pds">"</span>
 <h5>第二種打法(推薦)</h5>
 <div class="highlight highlight-source-shell"><pre class="notranslate">@echo off
 :: 確保指令路徑正確，避免環境變數問題
-SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">\n</span>etsh.exe
+SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">
+</span>etsh.exe
 <span class="pl-c1">echo</span> [1/3] 正在設定靜態 IP ...
 %CMD_NETSH% interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
 <span class="pl-c1">echo</span> [2/3] 正在設定主要 DNS ...
@@ -615,7 +616,8 @@ pause</pre></div>
 <p>假設IP位址為140.124.131.120則我需要這樣打</p>
 <div class="highlight highlight-source-shell"><pre class="notranslate">@echo off
 :: 確保指令路徑正確，避免環境變數問題
-SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">\n</span>etsh.exe
+SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">
+</span>etsh.exe
 <span class="pl-c1">echo</span> [1/3] 正在設定靜態 IP ...
 %CMD_NETSH% interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> static 140.124.131.120 255.255.255.0 140.124.131.254
 <span class="pl-c1">echo</span> [2/3] 正在設定主要 DNS ...
@@ -633,7 +635,8 @@ pause</pre></div>
 <div class="highlight highlight-source-shell"><pre class="notranslate">@echo off
 chcp 65001
 :: 確保指令路徑正確，避免環境變數問題
-SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">\n</span>etsh.exe
+SET CMD_NETSH=C:<span class="pl-cce">\W</span>indows<span class="pl-cce">\S</span>ystem32<span class="pl-cce">
+</span>etsh.exe
 <span class="pl-c1">echo</span> [1/2] 正在設定動態 IP ...
 netsh interface ip <span class="pl-c1">set</span> address name=<span class="pl-s"><span class="pl-pds">"</span>乙太網路<span class="pl-pds">"</span></span> source=dhcp
 <span class="pl-c1">echo</span> [2/2] 正在設定動態取得 DNS ...
@@ -727,7 +730,29 @@ sudo nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>有線�
 <div class="highlight highlight-source-shell"><pre class="notranslate">sudo networksetup -setdhcp <span class="pl-s"><span class="pl-pds">"</span>Ethernet<span class="pl-pds">"</span></span></pre></div>
 </li>
 </ol>
-<h2>第貳章	登錄裝置與連結IP</h2>
+<h2>第貳章   無線網路設定</h2>
+<p>在我們的宿舍裡，只有交誼廳才能使用北科大的 Wi-Fi，房間內以及走廊是沒有 Wi-Fi 訊號的，因此我們需要走出房間來到交誼廳使用Wi-Fi，以進行下一章的登錄裝置與連結IP(只有第一次使用需這樣處理)</p>
+<h3>Wi-Fi：NTUT</h3>
+<p>這是最簡單使用北科大提供的無線網路的方法，只需要在瀏覽器彈窗登入帳號密碼即可，每次使用每次都要登入</p>
+<h4>步驟1 ：首先點擊右下角的網路與音訊主菜單介面，接著點擊Wi-Fi按鍵右半邊，以進入Wi-Fi連線介面</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8725.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8725.png" alt="圖25" style="max-width: 100%;"></a></p>
+<h4>步驟2 ：進入Wi-Fi連線介面後，選擇你要連線的Wi-Fi，然後按連線</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8726.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8726.png" alt="圖26" style="max-width: 100%;"></a></p>
+<h4>步驟3 ：等個幾秒，瀏覽器自動跳出一個彈窗，請點擊繼續造訪網頁</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8727.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8727.png" alt="圖27" style="max-width: 100%;"></a></p>
+<h4>步驟4 ：看到這個登入畫面後，輸入校務系統的帳號及密碼後即可正常使用</h4>
+<p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8728.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8728.png" alt="圖28" style="max-width: 100%;"></a></p>
+
+<h3>Wi-Fi：NTUT-802.1x &amp; eduroam 教學</h3>
+<p>請看計算機與網路中心的安裝教學：<a href="https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw" rel="nofollow">https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw</a></p>
+
+<blockquote>
+<p>[!NOTE]<br>
+Android也算是一種Linux，因此Linux的設定方法請看Android設定方式。</p>
+</blockquote>
+
+<h3>VPN</h3>
+<h2>第參章	登錄裝置與連結IP</h2>
 <h4>步驟1 ：首先，請先登錄校園入口網站</h4>
 <h4>步驟2 ：點擊「網路管理」，接著點擊網路與資訊安全管理系統</h4>
 <p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8714.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8714.png" alt="圖14" style="max-width: 100%;"></a></p>
@@ -764,8 +789,10 @@ sudo nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>有線�
 <h4>步驟7 ：完成後，點擊「IP與MAC」，接著點擊「設備(MAC)管理」</h4>
 <h4>步驟8 ：接著點擊連結符號連結裝置</h4>
 <p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8720.png"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8720.png" alt="圖20" style="max-width: 100%;"></a></p>
-<h2>第參章 相關連結</h2>
-<h3>網路組連結</h3>
+<h2>第肆章 相關連結</h2>
+<h3>計算機與網路中心LINE連結</h3>
+<p><a href="https://line.me/R/ti/p/@pnt6913e" rel="nofollow"><img src="./%E5%9C%96%E6%AA%94/%E8%A8%88%E7%B6%B2%E4%B8%AD%E5%BF%83LINE.png" alt="計算機與網路中心LINE連結" style="max-width: 100%;"></a></p>
+<h3>東宿舍委員會網路組LINE連結</h3>
 <p><a href="https://line.me/R/ti/p/@222dnqse" rel="nofollow"><img src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8721.png" alt="網路組連結" style="max-width: 100%;"></a></p>
 <h3>電力系統</h3>
 <markdown-accessiblity-table><table role="table">
@@ -786,7 +813,7 @@ sudo nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>有線�
 </tr>
 </tbody>
 </table></markdown-accessiblity-table>
-            </article>
+</article>
         </main>
     </div>
 
@@ -811,7 +838,312 @@ sudo nmcli connection up <span class="pl-s"><span class="pl-pds">"</span>有線�
             
             // 1. Fallback rendering if API failed
             if (false) {
-                const rawMarkdown = `# 北科大宿舍有線網路攻略(ntut_eastdorm_Ethernet_Guide)\n\n## 第零章\t前置作業\n\n在你連上優質又穩定的宿網之前，你必須確認你準備的電腦是否有 RJ45 網孔（如下[圖 1](./圖檔/圖片1.jpg)）以及網路線（如下[圖 2](./圖檔/圖片2.jpg)，若是桌上型電腦 PC，建議網路線長度超過 3m）。若電腦沒有 RJ45 網孔，請先購買 USB-C / Type-C 轉 RJ45 網路轉接頭；若沒有網路線，請先購買網路線（建議購買 Cat5e 或 Cat6 等規格的網路線以支援 Giga 級網速）。\n\n| [![圖1](./圖檔/圖片1.jpg)](./圖檔/圖片1.jpg) | [![圖2](./圖檔/圖片2.jpg)](./圖檔/圖片2.jpg) |\n| :--: | :--: |\n| 圖 1 | 圖 2 |\n\n## 第壹章\t網際網路設定\n\n### 方法一：使用圖形化介面 (GUI)\n\n#### 步驟 1 ：先開啟 Windows「設定」\n\n[![圖3](./圖檔/圖片3.png)](./圖檔/圖片3.png)\n\n#### 步驟 2 ：點選「網路與網際網路」，接著點選「乙太網路」\n\n[![圖4](./圖檔/圖片4.png)](./圖檔/圖片4.png)\n\n#### 步驟 3 ：在「IP 指派」點選「編輯」\n\n[![圖5](./圖檔/圖片5.png)](./圖檔/圖片5.png)\n\n#### 步驟 4 ：將「編輯 IP 設定」從「自動 (DHCP)」切換為「手動」\n\n[![圖6](./圖檔/圖片6.png)](./圖檔/圖片6.png)\n\n#### 步驟 5 ：開啟「IPv4」選項，「IPv6」請保持關閉\n\n#### 步驟 6 ：依照宿網設定填寫 IP 位址、子網路遮罩、閘道與 DNS，並按儲存\n\n[![圖7](./圖檔/圖片7.png)](./圖檔/圖片7.png)\n\n### 方法二：Windows 系統 — 使用命令提示字元 (CMD) 【使用 .bat 檔自動設定】\n\n#### 步驟 1 ：將指令複製到記事本\n\n##### 第一種打法\n\n``` shell showLineNumbers\nnetsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} \nnetsh interface ip set dns name="乙太網路" static 140.124.13.1 \nnetsh interface ip add dns name="乙太網路" 140.124.13.2 index=2\n```\n\n假設IP位址為140.124.131.120則我需要這樣打\n\n``` shell showLineNumbers\nnetsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254 \nnetsh interface ip set dns name="乙太網路" static 140.124.13.1 \nnetsh interface ip add dns name="乙太網路" 140.124.13.2 index=2\n```\n\n##### 第二種打法(推薦)\n\n``` shell showLineNumbers\n@echo off\n:: 確保指令路徑正確，避免環境變數問題\nSET CMD_NETSH=C:\\Windows\\System32\\netsh.exe\necho [1/3] 正在設定靜態 IP ...\n%CMD_NETSH% interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}\necho [2/3] 正在設定主要 DNS ...\n%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1\necho [3/3] 正在設定次要 DNS ...\n%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2\necho.\necho 設定完成！檢查結果：\n%CMD_NETSH% interface ip show config name="乙太網路"\npause\n```\n\n假設IP位址為140.124.131.120則我需要這樣打\n\n``` shell showLineNumbers\n@echo off\n:: 確保指令路徑正確，避免環境變數問題\nSET CMD_NETSH=C:\\Windows\\System32\\netsh.exe\necho [1/3] 正在設定靜態 IP ...\n%CMD_NETSH% interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254\necho [2/3] 正在設定主要 DNS ...\n%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1\necho [3/3] 正在設定次要 DNS ...\n%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2\necho.\necho 設定完成！檢查結果：\n%CMD_NETSH% interface ip show config name="乙太網路"\npause\n```\n\n##### 附錄：使用DHCP(動態分配IP)打法【宿舍不能用】\n\n>\n>只有這個使用UTF-8也沒問題\n>\n\n``` shell showLineNumbers\n@echo off\nchcp 65001\n:: 確保指令路徑正確，避免環境變數問題\nSET CMD_NETSH=C:\\Windows\\System32\\netsh.exe\necho [1/2] 正在設定動態 IP ...\nnetsh interface ip set address name="乙太網路" source=dhcp\necho [2/2] 正在設定動態取得 DNS ...\nnetsh interface ip set dns name="乙太網路" source=dhcp\necho 已恢復為自動取得 IP。\necho.\necho 設定完成！檢查結果：\n%CMD_NETSH% interface ip show config name="乙太網路"\npause\n```\n\n#### 步驟 2 ：以 ANSI 編碼方式儲存檔案\n\n[![圖8](./圖檔/圖片8.png)](./圖檔/圖片8.png)\n\n#### 步驟 3 ：將副檔名從 .txt 改成 .bat\n\n[![圖9](./圖檔/圖片9.png)](./圖檔/圖片9.png) | [![圖10](./圖檔/圖片10.png)](./圖檔/圖片10.png) | [![圖11](./圖檔/圖片11.png)](./圖檔/圖片11.png) |\n| :--: | :--: | :--: |\n| 圖 9 | 圖 10 |  圖 11 |\n\n#### 步驟 4 ：以系統管理員身分執行該檔案\n\n[![圖12](./圖檔/圖片12.png)](./圖檔/圖片12.png)\n\n#### 步驟 5 ：看到 CMD 視窗顯示設定完成即完成設定\n\n[![圖13](./圖檔/圖片13.png)](./圖檔/圖片13.png)\n\n---\n\n### 方法三：Linux / macOS 系統 — 使用終端機 (Terminal) 【直接執行指令】\n\n#### Linux 系統 (使用 nmcli)\n\n多數現代 Linux 發行版 (如 Ubuntu, Debian, Fedora, Arch) 皆預設使用 NetworkManager，因此推薦使用 `nmcli` 命令列工具。\n\n1. **查詢網路卡連線名稱**：\n   ```shell\n   nmcli connection show\n   ```\n   請記下你要設定的有線網路連線名稱（中文系統通常為 `有線連線 1`，英文系統為 `Wired connection 1`，以下以 `"有線連線 1"` 為例）。\n\n2. **設定靜態 IP、閘道與 DNS**：\n   ```shell\n   # 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)\n   sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24\n   \n   # 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)\n   sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}\n   \n   # 設定主要與次要 DNS 伺服器\n   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"\n   \n   # 設定為手動 (靜態) 模式\n   sudo nmcli connection modify "有線連線 1" ipv4.method manual\n   ```\n\n   例如IP位址為140.124.131.120則我需要這樣打\n   \n   ```shell\n   sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24\n   sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254\n   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"\n   sudo nmcli connection modify "有線連線 1" ipv4.method manual\n   ```\n\n3. **重新啟動網路連線以套用設定**：\n   ```shell\n   sudo nmcli connection down "有線連線 1"\n   sudo nmcli connection up "有線連線 1"\n   ```\n\n4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：\n   ```shell\n   sudo nmcli connection modify "有線連線 1" ipv4.method auto\n   sudo nmcli connection up "有線連線 1"\n   ```\n\n#### macOS 系統 (使用 networksetup)\n\nmacOS 系統可以使用內建的 `networksetup` 指令進行設定。\n\n1. **查詢網路服務名稱**：\n   ```shell\n   networksetup -listallnetworkservices\n   ```\n   請記下你的有線網路服務名稱 (通常為 `Ethernet` 或 `AX88179A` 等外接轉接卡名稱，以下以 `"Ethernet"` 為例)。\n\n2. **設定靜態 IP、子網路遮罩與閘道**：\n   ```shell\n   sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}\n   ```\n\n3. **設定主要與次要 DNS**：\n   ```shell\n   sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2\n   ```\n\n4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：\n   ```shell\n   sudo networksetup -setdhcp "Ethernet"\n   ```\n\n## 第貳章\t登錄裝置與連結IP\n\n#### 步驟1 ：首先，請先登錄校園入口網站\n\n#### 步驟2 ：點擊「網路管理」，接著點擊網路與資訊安全管理系統\n\n[![圖14](./圖檔/圖片14.png)](./圖檔/圖片14.png)\n\n#### 步驟3 ：完成點擊之後，自動新開分頁「網路與資訊安全管理系統」\n\n#### 步驟4 ：點擊「IP與MAC」，接著點擊「設備(MAC)管理」\n\n[![圖15](./圖檔/圖片15.png)](./圖檔/圖片15.png)\n\n#### 步驟5 ：點擊「新增」\n\n[![圖16](./圖檔/圖片16.png)](./圖檔/圖片16.png)\n\n> [!TIP]\n> **如何取得網路卡實體位址 (MAC Address)？**\n>\n> **Windows 系統：**\n> 1. **使用圖形化介面 (GUI)**：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。\n>    [![圖17](./圖檔/圖片17.png)](./圖檔/圖片17.png)\n> 2. **使用命令提示字元 (CMD)**：輸入 `getmac /v /fo list` 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。\n>    ```shell\n>    getmac /v /fo list\n>    ```\n>    [![圖18](./圖檔/圖片18.png)](./圖檔/圖片18.png)\n>\n> **Linux 系統：**\n> 1. **使用終端機**：開啟終端機輸入 `ip link show` 指令，找到有線網卡（通常以 `en` 或 `eth` 開頭）下方的 `link/ether`，後面的 12 碼十六進位字元即為 MAC 位址。\n>    ```shell\n>    ip link show\n>    ```\n>\n> **macOS 系統：**\n> 1. **使用圖形化介面**：點擊左上角「蘋果選單」 \uf8ff >「系統設定」>「網路」> 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）> 點擊「詳細資訊...」> 點擊左側「硬體」，即可看到「MAC 位址」。\n> 2. **使用終端機**：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 `Ethernet` 或對應外接轉接卡的 `Ethernet Address`）：\n>    ```shell\n>    networksetup -listallhardwareports\n>    ```\n\n#### 步驟6 ：依照真實情況去做填寫\n\n[![圖19](./圖檔/圖片19.png)](./圖檔/圖片19.png)\n\n#### 步驟7 ：完成後，點擊「IP與MAC」，接著點擊「設備(MAC)管理」\n\n#### 步驟8 ：接著點擊連結符號連結裝置\n\n[![圖20](./圖檔/圖片20.png)](./圖檔/圖片20.png)\n\n## 第參章 相關連結\n\n### 網路組連結\n\n[![網路組連結](./圖檔/圖片21.png)](https://line.me/R/ti/p/@222dnqse)\n\n### 電力系統\n|  | ![電力首頁](./圖檔/圖片22.png) | ![客服中心](./圖檔/圖片23.png) | ![啟用電力](./圖檔/圖片24.png) |\n| :-: | :-: | :-: | :-: |\n| [簡報](北科-智慧電力計費管理系統網頁平台操作手冊（學生）.pdf) | [首頁](https://www.aotech.tw/ntut) | [客服中心](https://www.aotech.tw/ntut/content_us.php) | [啟用電力](https://www.aotech.tw/ntut_power) |`; // Escaped raw string
+                const rawMarkdown = `# 北科大宿舍有線網路攻略(ntut_eastdorm_Ethernet_Guide)
+
+## 第零章	前置作業
+
+在你連上優質又穩定的宿網之前，你必須確認你準備的電腦是否有 RJ45 網孔（如下[圖 1](./圖檔/圖片1.jpg)）以及網路線（如下[圖 2](./圖檔/圖片2.jpg)，若是桌上型電腦 PC，建議網路線長度超過 3m）。若電腦沒有 RJ45 網孔，請先購買 USB-C / Type-C 轉 RJ45 網路轉接頭；若沒有網路線，請先購買網路線（建議購買 Cat5e 或 Cat6 等規格的網路線以支援 Giga 級網速）。
+
+| [![圖1](./圖檔/圖片1.jpg)](./圖檔/圖片1.jpg) | [![圖2](./圖檔/圖片2.jpg)](./圖檔/圖片2.jpg) |
+| :--: | :--: |
+| 圖 1 | 圖 2 |
+
+## 第壹章	網際網路設定
+
+### 方法一：使用圖形化介面 (GUI)
+
+#### 步驟 1 ：先開啟 Windows「設定」
+
+[![圖3](./圖檔/圖片3.png)](./圖檔/圖片3.png)
+
+#### 步驟 2 ：點選「網路與網際網路」，接著點選「乙太網路」
+
+[![圖4](./圖檔/圖片4.png)](./圖檔/圖片4.png)
+
+#### 步驟 3 ：在「IP 指派」點選「編輯」
+
+[![圖5](./圖檔/圖片5.png)](./圖檔/圖片5.png)
+
+#### 步驟 4 ：將「編輯 IP 設定」從「自動 (DHCP)」切換為「手動」
+
+[![圖6](./圖檔/圖片6.png)](./圖檔/圖片6.png)
+
+#### 步驟 5 ：開啟「IPv4」選項，「IPv6」請保持關閉
+
+#### 步驟 6 ：依照宿網設定填寫 IP 位址、子網路遮罩、閘道與 DNS，並按儲存
+
+[![圖7](./圖檔/圖片7.png)](./圖檔/圖片7.png)
+
+### 方法二：Windows 系統 — 使用命令提示字元 (CMD) 【使用 .bat 檔自動設定】
+
+#### 步驟 1 ：將指令複製到記事本
+
+##### 第一種打法
+
+\`\`\`shell
+netsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} 
+netsh interface ip set dns name="乙太網路" static 140.124.13.1 
+netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
+\`\`\`
+
+假設IP位址為140.124.131.120則我需要這樣打
+
+\`\`\`shell
+netsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254 
+netsh interface ip set dns name="乙太網路" static 140.124.13.1 
+netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2
+\`\`\`
+
+##### 第二種打法(推薦)
+
+\`\`\`shell
+@echo off
+:: 確保指令路徑正確，避免環境變數問題
+SET CMD_NETSH=C:\Windows\System32\netsh.exe
+echo [1/3] 正在設定靜態 IP ...
+%CMD_NETSH% interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
+echo [2/3] 正在設定主要 DNS ...
+%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1
+echo [3/3] 正在設定次要 DNS ...
+%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2
+echo.
+echo 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause
+\`\`\`
+
+假設IP位址為140.124.131.120則我需要這樣打
+
+\`\`\`shell
+@echo off
+:: 確保指令路徑正確，避免環境變數問題
+SET CMD_NETSH=C:\Windows\System32\netsh.exe
+echo [1/3] 正在設定靜態 IP ...
+%CMD_NETSH% interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254
+echo [2/3] 正在設定主要 DNS ...
+%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1
+echo [3/3] 正在設定次要 DNS ...
+%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2
+echo.
+echo 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause
+\`\`\`
+
+##### 附錄：使用DHCP(動態分配IP)打法【宿舍不能用】
+
+> 只有這個使用UTF-8也沒問題
+
+\`\`\`shell
+@echo off
+chcp 65001
+:: 確保指令路徑正確，避免環境變數問題
+SET CMD_NETSH=C:\Windows\System32\netsh.exe
+echo [1/2] 正在設定動態 IP ...
+netsh interface ip set address name="乙太網路" source=dhcp
+echo [2/2] 正在設定動態取得 DNS ...
+netsh interface ip set dns name="乙太網路" source=dhcp
+echo 已恢復為自動取得 IP。
+echo.
+echo 設定完成！檢查結果：
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause
+\`\`\`
+
+#### 步驟 2 ：以 ANSI 編碼方式儲存檔案
+
+[![圖8](./圖檔/圖片8.png)](./圖檔/圖片8.png)
+
+#### 步驟 3 ：將副檔名從 .txt 改成 .bat
+
+| [![圖9](./圖檔/圖片9.png)](./圖檔/圖片9.png) | [![圖10](./圖檔/圖片10.png)](./圖檔/圖片10.png) | [![圖11](./圖檔/圖片11.png)](./圖檔/圖片11.png) |
+| :-------------------------------------: | :----------------------------------------: | :----------------------------------------: |
+|                  圖 9                  |                   圖 10                   |                   圖 11                   |
+
+#### 步驟 4 ：以系統管理員身分執行該檔案
+
+[![圖12](./圖檔/圖片12.png)](./圖檔/圖片12.png)
+
+#### 步驟 5 ：看到 CMD 視窗顯示設定完成即完成設定
+
+[![圖13](./圖檔/圖片13.png)](./圖檔/圖片13.png)
+
+---
+
+### 方法三：Linux / macOS 系統 — 使用終端機 (Terminal) 【直接執行指令】
+
+#### Linux 系統 (使用 nmcli)
+
+多數現代 Linux 發行版 (如 Ubuntu, Debian, Fedora, Arch) 皆預設使用 NetworkManager，因此推薦使用 \`nmcli\` 命令列工具。
+
+1. **查詢網路卡連線名稱**：
+
+   \`\`\`shell
+   nmcli connection show
+   \`\`\`
+
+   請記下你要設定的有線網路連線名稱（中文系統通常為 \`有線連線 1\`，英文系統為 \`Wired connection 1\`，以下以 \`"有線連線 1"\` 為例）。
+2. **設定靜態 IP、閘道與 DNS**：
+
+   \`\`\`shell
+   # 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)
+   sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24
+
+   # 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)
+   sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}
+
+   # 設定主要與次要 DNS 伺服器
+   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
+
+   # 設定為手動 (靜態) 模式
+   sudo nmcli connection modify "有線連線 1" ipv4.method manual
+   \`\`\`
+
+   例如IP位址為140.124.131.120則我需要這樣打
+
+   \`\`\`shell
+   sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24
+   sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254
+   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
+   sudo nmcli connection modify "有線連線 1" ipv4.method manual
+   \`\`\`
+3. **重新啟動網路連線以套用設定**：
+
+   \`\`\`shell
+   sudo nmcli connection down "有線連線 1"
+   sudo nmcli connection up "有線連線 1"
+   \`\`\`
+4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：
+
+   \`\`\`shell
+   sudo nmcli connection modify "有線連線 1" ipv4.method auto
+   sudo nmcli connection up "有線連線 1"
+   \`\`\`
+
+#### macOS 系統 (使用 networksetup)
+
+macOS 系統可以使用內建的 \`networksetup\` 指令進行設定。
+
+1. **查詢網路服務名稱**：
+
+   \`\`\`shell
+   networksetup -listallnetworkservices
+   \`\`\`
+
+   請記下你的有線網路服務名稱 (通常為 \`Ethernet\` 或 \`AX88179A\` 等外接轉接卡名稱，以下以 \`"Ethernet"\` 為例)。
+2. **設定靜態 IP、子網路遮罩與閘道**：
+
+   \`\`\`shell
+   sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
+   \`\`\`
+3. **設定主要與次要 DNS**：
+
+   \`\`\`shell
+   sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2
+   \`\`\`
+4. **恢復自動取得 IP (DHCP) [宿舍有線網路不能用]**：
+
+   \`\`\`shell
+   sudo networksetup -setdhcp "Ethernet"
+   \`\`\`
+
+## 第貳章   無線網路設定
+在我們的宿舍裡，只有交誼廳才能使用北科大的 Wi-Fi，房間內以及走廊是沒有 Wi-Fi 訊號的，因此我們需要走出房間來到交誼廳使用Wi-Fi，以進行下一章的登錄裝置與連結IP(只有第一次使用需這樣處理)
+### Wi-Fi：NTUT
+這是最簡單使用北科大提供的無線網路的方法，只需要在瀏覽器彈窗登入帳號密碼即可，每次使用每次都要登入
+#### 步驟1 ：首先點擊右下角的網路與音訊主菜單介面，接著點擊Wi-Fi按鍵右半邊，以進入Wi-Fi連線介面
+[![圖25](./圖檔/圖片25.png)](./圖檔/圖片25.png)
+#### 步驟2 ：進入Wi-Fi連線介面後，選擇你要連線的Wi-Fi，然後按連線
+[![圖26](./圖檔/圖片26.png)](./圖檔/圖片26.png
+)
+#### 步驟3 ：等個幾秒，瀏覽器自動跳出一個彈窗，請點擊繼續造訪網頁
+[![圖27](./圖檔/圖片27.png)](./圖檔/圖片27.png
+)
+#### 步驟4 ：看到這個登入畫面後，輸入校務系統的帳號及密碼後即可正常使用
+[![圖28](./圖檔/圖片28.png)](./圖檔/圖片28.png
+)
+
+### Wi-Fi：NTUT-802.1x & eduroam 教學
+請看計算機與網路中心的安裝教學：[https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw](https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw)
+
+> [!NOTE]
+>Android也算是一種Linux，因此Linux的設定方法請看Android設定方式。
+
+### VPN
+
+## 第參章	登錄裝置與連結IP
+
+#### 步驟1 ：首先，請先登錄校園入口網站
+
+#### 步驟2 ：點擊「網路管理」，接著點擊網路與資訊安全管理系統
+
+[![圖14](./圖檔/圖片14.png)](./圖檔/圖片14.png)
+
+#### 步驟3 ：完成點擊之後，自動新開分頁「網路與資訊安全管理系統」
+
+#### 步驟4 ：點擊「IP與MAC」，接著點擊「設備(MAC)管理」
+
+[![圖15](./圖檔/圖片15.png)](./圖檔/圖片15.png)
+
+#### 步驟5 ：點擊「新增」
+
+[![圖16](./圖檔/圖片16.png)](./圖檔/圖片16.png)
+
+> [!TIP]
+> **如何取得網路卡實體位址 (MAC Address)？**
+>
+> **Windows 系統：**
+>
+> 1. **使用圖形化介面 (GUI)**：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。
+>    [![圖17](./圖檔/圖片17.png)](./圖檔/圖片17.png)
+> 2. **使用命令提示字元 (CMD)**：輸入 \`getmac /v /fo list\` 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。
+>    \`\`\`shell
+>    getmac /v /fo list
+>    \`\`\`
+>
+>    [![圖18](./圖檔/圖片18.png)](./圖檔/圖片18.png)
+>
+> **Linux 系統：**
+>
+> 1. **使用終端機**：開啟終端機輸入 \`ip link show\` 指令，找到有線網卡（通常以 \`en\` 或 \`eth\` 開頭）下方的 \`link/ether\`，後面的 12 碼十六進位字元即為 MAC 位址。
+>    \`\`\`shell
+>    ip link show
+>    \`\`\`
+>
+> **macOS 系統：**
+>
+> 1. **使用圖形化介面**：點擊左上角「蘋果選單」  >「系統設定」>「網路」> 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）> 點擊「詳細資訊...」> 點擊左側「硬體」，即可看到「MAC 位址」。
+> 2. **使用終端機**：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 \`Ethernet\` 或對應外接轉接卡的 \`Ethernet Address\`）：
+>    \`\`\`shell
+>    networksetup -listallhardwareports
+>    \`\`\`
+
+#### 步驟6 ：依照真實情況去做填寫
+
+[![圖19](./圖檔/圖片19.png)](./圖檔/圖片19.png)
+
+#### 步驟7 ：完成後，點擊「IP與MAC」，接著點擊「設備(MAC)管理」
+
+#### 步驟8 ：接著點擊連結符號連結裝置
+
+[![圖20](./圖檔/圖片20.png)](./圖檔/圖片20.png)
+
+## 第肆章 相關連結
+
+### 計算機與網路中心LINE連結
+
+ [![計算機與網路中心LINE連結](./圖檔/計網中心LINE.png)](https://line.me/R/ti/p/@pnt6913e)
+
+### 東宿舍委員會網路組LINE連結
+
+[![網路組連結](./圖檔/圖片21.png)](https://line.me/R/ti/p/@222dnqse)
+
+### 電力系統
+
+|                                                            |  [![電力首頁](./圖檔/圖片22.png)](https://www.aotech.tw/ntut)  |            [![客服中心](./圖檔/圖片23.png)](https://www.aotech.tw/ntut/content_us.php)            |       [![啟用電力](./圖檔/圖片24.png)](https://www.aotech.tw/ntut_power)       |
+| :--------------------------------------------------------: | :-----------------------------: | :------------------------------------------------: | :---------------------------------------: |
+| [簡報](北科-智慧電力計費管理系統網頁平台操作手冊（學生）.pdf) | [首頁](https://www.aotech.tw/ntut) | [客服中心](https://www.aotech.tw/ntut/content_us.php) | [啟用電力](https://www.aotech.tw/ntut_power) |
+`; // Escaped raw string
                 markdownContainer.innerHTML = marked.parse(rawMarkdown);
             }
 
