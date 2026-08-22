@@ -591,63 +591,58 @@
 <h3>方法二：Windows 系統 — 使用命令提示字元 (CMD) 【使用 .bat 檔自動設定】</h3>
 <h4>步驟 1 ：將指令複製到記事本</h4>
 <h5>第一種打法</h5>
-<pre><code class="language-shell">netsh interface ip set address name=&quot;乙太網路&quot; static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} 
-netsh interface ip set dns name=&quot;乙太網路&quot; static 140.124.13.1 
-netsh interface ip add dns name=&quot;乙太網路&quot; 140.124.13.2 index=2
-</code></pre>
+<pre class="highlight"><code class="language-shell">netsh interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254} 
+netsh interface ip set dns name="乙太網路" static 140.124.13.1 
+netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2</code></pre>
 <p>假設IP位址為140.124.131.120則我需要這樣打</p>
-<pre><code class="language-shell">netsh interface ip set address name=&quot;乙太網路&quot; static 140.124.131.120 255.255.255.0 140.124.131.254 
-netsh interface ip set dns name=&quot;乙太網路&quot; static 140.124.13.1 
-netsh interface ip add dns name=&quot;乙太網路&quot; 140.124.13.2 index=2
-</code></pre>
+<pre class="highlight"><code class="language-shell">netsh interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254 
+netsh interface ip set dns name="乙太網路" static 140.124.13.1 
+netsh interface ip add dns name="乙太網路" 140.124.13.2 index=2</code></pre>
 <h5>第二種打法(推薦)</h5>
-<pre><code class="language-shell">@echo off
+<pre class="highlight"><code class="language-shell">@echo off
 :: 確保指令路徑正確，避免環境變數問題
 SET CMD_NETSH=C:\Windows\System32\netsh.exe
 echo [1/3] 正在設定靜態 IP ...
-%CMD_NETSH% interface ip set address name=&quot;乙太網路&quot; static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
+%CMD_NETSH% interface ip set address name="乙太網路" static {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}
 echo [2/3] 正在設定主要 DNS ...
-%CMD_NETSH% interface ip set dns name=&quot;乙太網路&quot; static 140.124.13.1
+%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1
 echo [3/3] 正在設定次要 DNS ...
-%CMD_NETSH% interface ip add dns name=&quot;乙太網路&quot; 140.124.13.2 index=2
+%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2
 echo.
 echo 設定完成！檢查結果：
-%CMD_NETSH% interface ip show config name=&quot;乙太網路&quot;
-pause
-</code></pre>
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause</code></pre>
 <p>假設IP位址為140.124.131.120則我需要這樣打</p>
-<pre><code class="language-shell">@echo off
+<pre class="highlight"><code class="language-shell">@echo off
 :: 確保指令路徑正確，避免環境變數問題
 SET CMD_NETSH=C:\Windows\System32\netsh.exe
 echo [1/3] 正在設定靜態 IP ...
-%CMD_NETSH% interface ip set address name=&quot;乙太網路&quot; static 140.124.131.120 255.255.255.0 140.124.131.254
+%CMD_NETSH% interface ip set address name="乙太網路" static 140.124.131.120 255.255.255.0 140.124.131.254
 echo [2/3] 正在設定主要 DNS ...
-%CMD_NETSH% interface ip set dns name=&quot;乙太網路&quot; static 140.124.13.1
+%CMD_NETSH% interface ip set dns name="乙太網路" static 140.124.13.1
 echo [3/3] 正在設定次要 DNS ...
-%CMD_NETSH% interface ip add dns name=&quot;乙太網路&quot; 140.124.13.2 index=2
+%CMD_NETSH% interface ip add dns name="乙太網路" 140.124.13.2 index=2
 echo.
 echo 設定完成！檢查結果：
-%CMD_NETSH% interface ip show config name=&quot;乙太網路&quot;
-pause
-</code></pre>
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause</code></pre>
 <h5>附錄：使用DHCP(動態分配IP)打法【宿舍不能用】</h5>
 <blockquote>
 <p>只有這個使用UTF-8也沒問題</p>
 </blockquote>
-<pre><code class="language-shell">@echo off
+<pre class="highlight"><code class="language-shell">@echo off
 chcp 65001
 :: 確保指令路徑正確，避免環境變數問題
 SET CMD_NETSH=C:\Windows\System32\netsh.exe
 echo [1/2] 正在設定動態 IP ...
-netsh interface ip set address name=&quot;乙太網路&quot; source=dhcp
+netsh interface ip set address name="乙太網路" source=dhcp
 echo [2/2] 正在設定動態取得 DNS ...
-netsh interface ip set dns name=&quot;乙太網路&quot; source=dhcp
+netsh interface ip set dns name="乙太網路" source=dhcp
 echo 已恢復為自動取得 IP。
 echo.
 echo 設定完成！檢查結果：
-%CMD_NETSH% interface ip show config name=&quot;乙太網路&quot;
-pause
-</code></pre>
+%CMD_NETSH% interface ip show config name="乙太網路"
+pause</code></pre>
 <h4>步驟 2 ：以 ANSI 編碼方式儲存檔案</h4>
 <p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%878.png"><img alt="圖8" src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%878.png" /></a></p>
 <h4>步驟 3 ：將副檔名從 .txt 改成 .bat</h4>
@@ -678,51 +673,44 @@ pause
 <ol>
 <li><strong>查詢網路卡連線名稱</strong>：</li>
 </ol>
-<p><code>shell
-   nmcli connection show</code></p>
+<pre class="highlight"><code class="language-shell">nmcli connection show</code></pre>
 <p>請記下你要設定的有線網路連線名稱（中文系統通常為 <code>有線連線 1</code>，英文系統為 <code>Wired connection 1</code>，以下以 <code>"有線連線 1"</code> 為例）。
 2. <strong>設定靜態 IP、閘道與 DNS</strong>：</p>
-<p>```shell
-   # 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)
-   sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24</p>
-<p># 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)
-   sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}</p>
-<p># 設定主要與次要 DNS 伺服器
-   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"</p>
-<p># 設定為手動 (靜態) 模式
-   sudo nmcli connection modify "有線連線 1" ipv4.method manual
-   ```</p>
+<pre class="highlight"><code class="language-shell"># 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)
+sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24
+
+# 設定預設閘道 (Gateway) (例如將 IP 位址的最後一碼改成 254)
+sudo nmcli connection modify "有線連線 1" ipv4.gateway {你的IP位址的末碼改成254}
+
+# 設定主要與次要 DNS 伺服器
+sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
+
+# 設定為手動 (靜態) 模式
+sudo nmcli connection modify "有線連線 1" ipv4.method manual</code></pre>
 <p>例如IP位址為140.124.131.120則我需要這樣打</p>
-<p><code>shell
-   sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24
-   sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254
-   sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
-   sudo nmcli connection modify "有線連線 1" ipv4.method manual</code>
+<p><pre class="highlight"><code class="language-shell">sudo nmcli connection modify "有線連線 1" ipv4.addresses 140.124.131.120/24
+sudo nmcli connection modify "有線連線 1" ipv4.gateway 140.124.131.254
+sudo nmcli connection modify "有線連線 1" ipv4.dns "140.124.13.1 140.124.13.2"
+sudo nmcli connection modify "有線連線 1" ipv4.method manual</code></pre>
 3. <strong>重新啟動網路連線以套用設定</strong>：</p>
-<p><code>shell
-   sudo nmcli connection down "有線連線 1"
-   sudo nmcli connection up "有線連線 1"</code>
+<p><pre class="highlight"><code class="language-shell">sudo nmcli connection down "有線連線 1"
+sudo nmcli connection up "有線連線 1"</code></pre>
 4. <strong>恢復自動取得 IP (DHCP) [宿舍有線網路不能用]</strong>：</p>
-<p><code>shell
-   sudo nmcli connection modify "有線連線 1" ipv4.method auto
-   sudo nmcli connection up "有線連線 1"</code></p>
+<pre class="highlight"><code class="language-shell">sudo nmcli connection modify "有線連線 1" ipv4.method auto
+sudo nmcli connection up "有線連線 1"</code></pre>
 <h4>macOS 系統 (使用 networksetup)</h4>
 <p>macOS 系統可以使用內建的 <code>networksetup</code> 指令進行設定。</p>
 <ol>
 <li><strong>查詢網路服務名稱</strong>：</li>
 </ol>
-<p><code>shell
-   networksetup -listallnetworkservices</code></p>
+<pre class="highlight"><code class="language-shell">networksetup -listallnetworkservices</code></pre>
 <p>請記下你的有線網路服務名稱 (通常為 <code>Ethernet</code> 或 <code>AX88179A</code> 等外接轉接卡名稱，以下以 <code>"Ethernet"</code> 為例)。
 2. <strong>設定靜態 IP、子網路遮罩與閘道</strong>：</p>
-<p><code>shell
-   sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}</code>
+<p><pre class="highlight"><code class="language-shell">sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}</code></pre>
 3. <strong>設定主要與次要 DNS</strong>：</p>
-<p><code>shell
-   sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2</code>
+<p><pre class="highlight"><code class="language-shell">sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2</code></pre>
 4. <strong>恢復自動取得 IP (DHCP) [宿舍有線網路不能用]</strong>：</p>
-<p><code>shell
-   sudo networksetup -setdhcp "Ethernet"</code></p>
+<pre class="highlight"><code class="language-shell">sudo networksetup -setdhcp "Ethernet"</code></pre>
 <h2>第貳章   無線網路設定</h2>
 <p>在我們的宿舍裡，只有交誼廳才能使用北科大的 Wi-Fi，房間內以及走廊是沒有 Wi-Fi 訊號的，因此我們需要走出房間來到交誼廳使用Wi-Fi或是使用手機分享網路到電腦上並使用VPN連線，以進行下一章的登錄裝置與連結IP(只有第一次使用需這樣處理)</p>
 <h3>Wi-Fi：NTUT</h3>
@@ -782,22 +770,19 @@ Android也算是一種Linux，因此Linux的設定方法請看Android設定方�
 <li><strong>使用圖形化介面 (GUI)</strong>：回到「方法一：使用圖形化介面 (GUI)」的乙太網路設定頁面，在下方會看到「實體位址 (MAC)」，將其複製即可。
    <a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8717.png"><img alt="圖17" src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8717.png" /></a></li>
 <li><strong>使用命令提示字元 (CMD)</strong>：輸入 <code>getmac /v /fo list</code> 指令，找到有線網路卡（例如「乙太網路」或「Ethernet」）對應的「實體位址」即可。
-   <code>shell
-   getmac /v /fo list</code></li>
+   <pre class="highlight"><code class="language-shell">getmac /v /fo list</code></pre></li>
 </ol>
 <p><a href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8718.png"><img alt="圖18" src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8718.png" /></a></p>
 <p><strong>Linux 系統：</strong></p>
 <ol>
 <li><strong>使用終端機</strong>：開啟終端機輸入 <code>ip link show</code> 指令，找到有線網卡（通常以 <code>en</code> 或 <code>eth</code> 開頭）下方的 <code>link/ether</code>，後面的 12 碼十六進位字元即為 MAC 位址。
-   <code>shell
-   ip link show</code></li>
+   <pre class="highlight"><code class="language-shell">ip link show</code></pre></li>
 </ol>
 <p><strong>macOS 系統：</strong></p>
 <ol>
 <li><strong>使用圖形化介面</strong>：點擊左上角「蘋果選單」  &gt;「系統設定」&gt;「網路」&gt; 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）&gt; 點擊「詳細資訊...」&gt; 點擊左側「硬體」，即可看到「MAC 位址」。</li>
 <li><strong>使用終端機</strong>：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 <code>Ethernet</code> 或對應外接轉接卡的 <code>Ethernet Address</code>）：
-   <code>shell
-   networksetup -listallhardwareports</code></li>
+   <pre class="highlight"><code class="language-shell">networksetup -listallhardwareports</code></pre></li>
 </ol>
 </blockquote>
 <h4>步驟6 ：依照真實情況去做填寫</h4>

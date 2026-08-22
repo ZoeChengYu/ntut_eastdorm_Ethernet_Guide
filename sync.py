@@ -1,6 +1,7 @@
 import re
 import urllib.parse
 import markdown
+from pymdownx import superfences as _sf  # noqa: F401 — ensure pymdownx is available
 
 def encode_local_links(html):
     # Find all href and src attributes pointing to local paths containing Chinese characters and url-encode them
@@ -19,9 +20,23 @@ def encode_local_links(html):
     html = re.sub(r'(href|src)="([^"]+)"', replace_url, html)
     return html
 
+MARKDOWN_EXTENSIONS = [
+    'extra',
+    'tables',
+    'pymdownx.superfences',  # supports fenced code blocks inside list items
+    'pymdownx.highlight',    # syntax-aware highlighting
+]
+MARKDOWN_EXTENSION_CONFIGS = {
+    'pymdownx.highlight': {'use_pygments': False},  # keep plain <code> output
+}
+
 def render_readme_html(md_content):
     # Convert markdown to html using markdown library
-    html = markdown.markdown(md_content, extensions=['extra', 'tables', 'fenced_code'])
+    html = markdown.markdown(
+        md_content,
+        extensions=MARKDOWN_EXTENSIONS,
+        extension_configs=MARKDOWN_EXTENSION_CONFIGS,
+    )
     
     # Custom post-processing to match GFM styles
     # Wrap tables with markdown-accessiblity-table
@@ -34,7 +49,11 @@ def render_readme_html(md_content):
 
 def parse_markdown_to_index_html(md_content):
     # First, convert Markdown to standard HTML
-    html = markdown.markdown(md_content, extensions=['extra', 'tables', 'fenced_code'])
+    html = markdown.markdown(
+        md_content,
+        extensions=MARKDOWN_EXTENSIONS,
+        extension_configs=MARKDOWN_EXTENSION_CONFIGS,
+    )
     
     # 1. URL encode local paths
     html = encode_local_links(html)
@@ -80,7 +99,13 @@ def parse_markdown_to_index_html(md_content):
             return f'<a {attrs} target="_blank" rel="noopener">'
         return match.group(0)
     html = re.sub(r'<a ([^>]+)>', replace_links, html)
-    
+
+    # Fix: Python markdown sometimes wraps <pre> inside <p> when fenced code
+    # blocks follow list item continuations. Pull <pre> out of <p> tags.
+    html = re.sub(r'<p>\s*(<pre\b[^>]*>.*?</pre>)\s*', r'\1\n<p>', html, flags=re.DOTALL)
+    # Remove any empty <p></p> results
+    html = re.sub(r'<p>\s*</p>', '', html)
+
     # Now, let's split the HTML by block elements to wrap steps
     # We can parse the document and extract chapters, steps, etc.
     # To do this cleanly, let's split the HTML by headings.
