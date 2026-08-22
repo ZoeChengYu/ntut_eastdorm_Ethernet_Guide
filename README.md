@@ -227,9 +227,46 @@ macOS 系統可以使用內建的 `networksetup` 指令進行設定。
 請看計算機與網路中心的安裝教學：[https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw](https://cnc.ntut.edu.tw/p/404-1004-143944.php?Lang=zh-tw)
 
 > [!NOTE]
->Android也算是一種Linux，因此Linux的設定方法請看Android設定方式。
+> Android也算是一種Linux，因此Linux的設定方法請看Android設定方式。
 
 ### VPN
+
+> [!HINT]
+> [Android](https://play.google.com/store/apps/details?id=com.paloaltonetworks.globalprotect)/[IOS](https://apps.apple.com/tw/app/globalprotect/id1400555706) 使用者請到應用程式商店上下載 **Global Protect**，並直接跳到第5步。
+
+#### 步驟1 ：[前往計算機與網路中心網站](https://cnc.ntut.edu.tw/)
+
+#### 步驟2 ：點擊「下載專區」，接著點擊「[VPN連線服務](https://vpn.ntut.edu.tw/global-protect/login.esp)」
+
+[![VPN02](./圖檔/VPN02.png)](./圖檔/VPN02.png)
+
+#### 步驟3 ：按照下方圖示輸入帳號與密碼
+
+[![VPN03](./圖檔/VPN03.png)](./圖檔/VPN03.png)
+
+#### 步驟4 ：依照裝置類型與系統版本，選擇下載版本，並點擊文字下載並安裝Global Protect
+
+> [!NOTE]
+>
+> Windows 11：點擊「設定>>系統>>系統資訊」即可查看
+>
+> Windows 10：點擊「設定>>系統>>關於」即可查看
+>
+> MacOS：點擊「選單列左上角蘋果圖示>>關於這台Mac」即可查看
+
+[![VPN04](./圖檔/VPN04.png)](./圖檔/VPN04.png)
+
+#### 步驟5 ：安裝完成後，請打開Global Protect，並於入口網站的欄位輸入**vpn.ntut.edu.tw**後，點擊「**連線**」
+
+[![VPN05](./圖檔/VPN05.png)](./圖檔/VPN05.png)
+
+#### 步驟6 ：輸入帳號與密碼後，點擊「**登入**」
+
+[![VPN06](./圖檔/VPN06.png)](./圖檔/VPN06.png)
+
+#### 步驟7：出現這個畫面代表成功連上了VPN，接著就能進行登錄裝置與連結IP的設定了
+
+[![VPN07](./圖檔/VPN07.png)](./圖檔/VPN07.png)
 
 ## 第參章	登錄裝置與連結IP
 
