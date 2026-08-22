@@ -35,21 +35,46 @@ def fix_split_ordered_lists(html):
     """
     Python markdown splits ordered lists with fenced code blocks into multiple
     <ol> elements each starting at 1. This function restores correct numbering
-    by splitting on headings and adding start="N" to subsequent <ol> blocks.
+    by splitting on headings AND section-label paragraphs (e.g. <p><strong>OS Name:</strong></p>),
+    then adding start="N" only to consecutive <ol> blocks within a true sequence.
     """
+    # A "section reset" paragraph is a <p> containing only a <strong> label ending with : or ：
+    SECTION_LABEL = re.compile(
+        r'<p>\s*(?:<br\s*/?>\s*)?<strong>[^<]+[：:]\s*</strong>\s*</p>',
+        re.IGNORECASE
+    )
+
+    def fix_section(html_chunk):
+        """Within a chunk, number consecutive <ol> blocks correctly, resetting at section labels."""
+        # Tokenise by <ol> and </ol> boundaries and section-label paragraphs
+        tokens = re.split(r'(<ol>|<ol\s[^>]*>|</ol>)', html_chunk)
+        result = []
+        counter = 0
+        for tok in tokens:
+            if tok == '<ol>':
+                # Check if the *previous non-whitespace token* was a section-label paragraph
+                # which means we should reset the counter
+                prev_text = ''.join(result[-5:])  # look back a few tokens
+                if SECTION_LABEL.search(prev_text):
+                    counter = 1  # reset: this is item 1 of a new group
+                else:
+                    counter += 1
+                if counter > 1:
+                    result.append('<ol start="' + str(counter) + '">')
+                else:
+                    result.append('<ol>')
+            else:
+                result.append(tok)
+        return ''.join(result)
+
+    # Split on headings so each section between headings is handled independently
     parts = re.split(r'(<h[2345][^>]*>.*?</h[2345]>)', html, flags=re.DOTALL)
     fixed_parts = []
     for part in parts:
         if part.startswith('<h'):
             fixed_parts.append(part)
-            continue
-        count = [0]
-        def add_start(m, _c=count):
-            _c[0] += 1
-            if _c[0] > 1:
-                return '<ol start="' + str(_c[0]) + '">'
-            return m.group(0)
-        fixed_parts.append(re.sub(r'<ol>', add_start, part))
+        else:
+            fixed_parts.append(fix_section(part))
     return ''.join(fixed_parts)
 
 
