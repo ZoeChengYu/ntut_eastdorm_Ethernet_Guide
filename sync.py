@@ -30,6 +30,29 @@ MARKDOWN_EXTENSION_CONFIGS = {
     'pymdownx.highlight': {'use_pygments': False},  # keep plain <code> output
 }
 
+
+def fix_split_ordered_lists(html):
+    """
+    Python markdown splits ordered lists with fenced code blocks into multiple
+    <ol> elements each starting at 1. This function restores correct numbering
+    by splitting on headings and adding start="N" to subsequent <ol> blocks.
+    """
+    parts = re.split(r'(<h[2345][^>]*>.*?</h[2345]>)', html, flags=re.DOTALL)
+    fixed_parts = []
+    for part in parts:
+        if part.startswith('<h'):
+            fixed_parts.append(part)
+            continue
+        count = [0]
+        def add_start(m, _c=count):
+            _c[0] += 1
+            if _c[0] > 1:
+                return '<ol start="' + str(_c[0]) + '">'
+            return m.group(0)
+        fixed_parts.append(re.sub(r'<ol>', add_start, part))
+    return ''.join(fixed_parts)
+
+
 def render_readme_html(md_content):
     # Convert markdown to html using markdown library
     html = markdown.markdown(
@@ -49,6 +72,8 @@ def render_readme_html(md_content):
     # Fix: break orphaned list-item numbers (e.g. 'text.\n2. <strong>') into separate <p>
     html = re.sub(r'(?<=</code>)\n(\d+\.\s+<strong>)', r'</p>\n<p>\1', html)
     html = re.sub(r'([^>])\n(\d+\.\s+<strong>)', r'\1</p>\n<p>\2', html)
+    # Fix: restore correct numbering to split <ol> blocks
+    html = fix_split_ordered_lists(html)
 
     # URL encode local paths
     html = encode_local_links(html)
@@ -114,6 +139,8 @@ def parse_markdown_to_index_html(md_content):
     html = re.sub(r'<p>\s*</p>', '', html)
     # Break orphaned list-item numbers into separate <p>
     html = re.sub(r'([^>])\n(\d+\.\s+<strong>)', r'\1</p>\n<p>\2', html)
+    # Fix: restore correct numbering to split <ol> blocks
+    html = fix_split_ordered_lists(html)
 
     # Now, let's split the HTML by block elements to wrap steps
     # We can parse the document and extract chapters, steps, etc.

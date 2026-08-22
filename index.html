@@ -561,7 +561,7 @@ sudo nmcli connection up "有線連線 1"</code></pre>
 </ol>
 <pre class="highlight"><code class="language-shell">networksetup -listallnetworkservices</code></pre>
 <p>請記下你的有線網路服務名稱 (通常為 <code>Ethernet</code> 或 <code>AX88179A</code> 等外接轉接卡名稱，以下以 <code>"Ethernet"</code> 為例)。</p>
-<ol>
+<ol start="2">
 <li><strong>設定靜態 IP、子網路遮罩與閘道</strong>：</li>
 </ol>
 <pre class="highlight"><code class="language-shell">sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}</code></pre>
@@ -671,12 +671,12 @@ sudo nmcli connection up "有線連線 1"</code></pre>
     </ol>
     <a class="img-link" href="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8718.png" target="_blank" rel="noopener"><img alt="圖18" src="./%E5%9C%96%E6%AA%94/%E5%9C%96%E7%89%8718.png" /></a>
     <p><strong>Linux 系統：</strong></p>
-    <ol>
+    <ol start="2">
     <li><strong>使用終端機</strong>：開啟終端機輸入 <code>ip link show</code> 指令，找到有線網卡（通常以 <code>en</code> 或 <code>eth</code> 開頭）下方的 <code>link/ether</code>，後面的 12 碼十六進位字元即為 MAC 位址。
        <pre class="highlight"><code class="language-shell">ip link show</code></pre></li>
     </ol>
     <p><strong>macOS 系統：</strong></p>
-    <ol>
+    <ol start="3">
     <li><strong>使用圖形化介面</strong>：點擊左上角「蘋果選單」  &gt;「系統設定」&gt;「網路」&gt; 點擊你的有線網路服務（如「USB 10/100/1000 LAN」）&gt; 點擊「詳細資訊...」&gt; 點擊左側「硬體」，即可看到「MAC 位址」。</li>
     <li><strong>使用終端機</strong>：開啟 Terminal 輸入下述指令即可顯示硬體連接埠與其對應的 MAC 位址（請找 <code>Ethernet</code> 或對應外接轉接卡的 <code>Ethernet Address</code>）：
        <pre class="highlight"><code class="language-shell">networksetup -listallhardwareports</code></pre></li>
