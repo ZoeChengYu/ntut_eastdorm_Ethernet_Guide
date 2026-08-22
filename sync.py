@@ -43,6 +43,13 @@ def render_readme_html(md_content):
     html = re.sub(r'<table>', '<markdown-accessiblity-table><table role="table">', html)
     html = re.sub(r'</table>', '</table></markdown-accessiblity-table>', html)
     
+    # Fix: pull <pre> out of <p> wrappers (Python markdown limitation with fenced code in lists)
+    html = re.sub(r'<p>\s*(<pre\b[^>]*>.*?</pre>)\s*', r'\1\n<p>', html, flags=re.DOTALL)
+    html = re.sub(r'<p>\s*</p>', '', html)
+    # Fix: break orphaned list-item numbers (e.g. 'text.\n2. <strong>') into separate <p>
+    html = re.sub(r'(?<=</code>)\n(\d+\.\s+<strong>)', r'</p>\n<p>\1', html)
+    html = re.sub(r'([^>])\n(\d+\.\s+<strong>)', r'\1</p>\n<p>\2', html)
+
     # URL encode local paths
     html = encode_local_links(html)
     return html
@@ -105,6 +112,8 @@ def parse_markdown_to_index_html(md_content):
     html = re.sub(r'<p>\s*(<pre\b[^>]*>.*?</pre>)\s*', r'\1\n<p>', html, flags=re.DOTALL)
     # Remove any empty <p></p> results
     html = re.sub(r'<p>\s*</p>', '', html)
+    # Break orphaned list-item numbers into separate <p>
+    html = re.sub(r'([^>])\n(\d+\.\s+<strong>)', r'\1</p>\n<p>\2', html)
 
     # Now, let's split the HTML by block elements to wrap steps
     # We can parse the document and extract chapters, steps, etc.

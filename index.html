@@ -529,8 +529,8 @@ pause</code></pre>
 <li><strong>查詢網路卡連線名稱</strong>：</li>
 </ol>
 <pre class="highlight"><code class="language-shell">nmcli connection show</code></pre>
-<p>請記下你要設定的有線網路連線名稱（中文系統通常為 <code>有線連線 1</code>，英文系統為 <code>Wired connection 1</code>，以下以 <code>"有線連線 1"</code> 為例）。
-2. <strong>設定靜態 IP、閘道與 DNS</strong>：</p>
+<p>請記下你要設定的有線網路連線名稱（中文系統通常為 <code>有線連線 1</code>，英文系統為 <code>Wired connection 1</code>，以下以 <code>"有線連線 1"</code> 為例）。</p>
+<p>2. <strong>設定靜態 IP、閘道與 DNS</strong>：</p>
 <pre class="highlight"><code class="language-shell"># 設定 IP 位址與子網路遮罩 (請將 {你的IP位址} 替換成實際分配的 IP)
 sudo nmcli connection modify "有線連線 1" ipv4.addresses {你的IP位址}/24
 
@@ -560,8 +560,10 @@ sudo nmcli connection up "有線連線 1"</code></pre>
 <li><strong>查詢網路服務名稱</strong>：</li>
 </ol>
 <pre class="highlight"><code class="language-shell">networksetup -listallnetworkservices</code></pre>
-<p>請記下你的有線網路服務名稱 (通常為 <code>Ethernet</code> 或 <code>AX88179A</code> 等外接轉接卡名稱，以下以 <code>"Ethernet"</code> 為例)。
-2. <strong>設定靜態 IP、子網路遮罩與閘道</strong>：</p>
+<p>請記下你的有線網路服務名稱 (通常為 <code>Ethernet</code> 或 <code>AX88179A</code> 等外接轉接卡名稱，以下以 <code>"Ethernet"</code> 為例)。</p>
+<ol>
+<li><strong>設定靜態 IP、子網路遮罩與閘道</strong>：</li>
+</ol>
 <pre class="highlight"><code class="language-shell">sudo networksetup -setmanual "Ethernet" {你的IP位址} 255.255.255.0 {你的IP位址的末碼改成254}</code></pre>
 <p>3. <strong>設定主要與次要 DNS</strong>：</p>
 <pre class="highlight"><code class="language-shell">sudo networksetup -setdnsservers "Ethernet" 140.124.13.1 140.124.13.2</code></pre>
